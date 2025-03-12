@@ -33,10 +33,8 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         .then(data => {
             console.log('Post added:', data);
 
-            const newPostElement = document.createElement('div');
-            newPostElement.classList.add('post');
-            newPostElement.textContent = newPost.content; // Display the content of the new post
-            document.getElementById('feed').prepend(newPostElement);
+            // Reload posts after adding a new one
+            loadPosts();  // Refresh the feed
 
             document.getElementById('postForm').reset();
             document.getElementById('popupLayer').style.display = 'none';
@@ -49,17 +47,26 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
 
 // Fetch posts from the get-posts function
 async function loadPosts() {
-  const response = await fetch('/.netlify/functions/get-posts');
-  const posts = await response.json();
+    try {
+        const response = await fetch('/.netlify/functions/get-posts');
+        const posts = await response.json();
 
-  const feed = document.getElementById('feed');
-  posts.forEach(post => {
-    const postElement = document.createElement('div');
-    postElement.classList.add('post');
-    postElement.textContent = post.content;
-    feed.appendChild(postElement);
-  });
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';  // Clear current posts before adding the new ones
+
+        posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.textContent = post.content;  // Display the content from the 'content' column
+            feed.appendChild(postElement);
+        });
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+    }
 }
 
-loadPosts(); // Call the function to load posts on page load
+// Call loadPosts() when the page loads
+window.onload = function() {
+    loadPosts();  // Fetch and display posts when the page loads
+};
 
