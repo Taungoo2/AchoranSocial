@@ -95,3 +95,8 @@ async function loadPosts() {
     console.error('Error fetching posts:', error);
   }
 }
+
+// Call loadPosts when the page is loaded to fetch initial posts
+window.onload = function() {
+  loadPosts();  // Fetch and display posts when the page loads
+};
