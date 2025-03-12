@@ -27,7 +27,7 @@
   <!-- Add Post Button -->
   <div id="addPostBtn" class="add-post-btn">+</div>
 
-  <!-- Popup Layer -->
+  <!-- Popup Layer (for creating a post) -->
   <div id="popupLayer" class="popup-layer">
     <div class="popup">
       <h2>Create a Post</h2>
@@ -35,6 +35,14 @@
         <textarea id="postContent" rows="4" placeholder="Write something..."></textarea>
         <button type="submit" id="postBtn">Post</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Post Content Popup (for showing clicked post content) -->
+  <div id="postContentPopup" class="popup-layer">
+    <div class="popup">
+      <h2>Post Content</h2>
+      <p class="popup-content"></p>
     </div>
   </div>
 
@@ -48,4 +56,5 @@
   <script src="main.js"></script>
 </body>
 </html>
+
 
