@@ -91,6 +91,7 @@ h1 {
     width: 100%;  /* Ensure the post fills the container width */
     max-width: 800px;  /* Post boxes won't grow beyond this width */
     box-sizing: border-box;
+    text-align: left; 
 }
 
 
