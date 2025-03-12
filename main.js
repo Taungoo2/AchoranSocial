@@ -46,6 +46,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
 });
 
 // Fetch posts from Supabase and display them in order by id
+// Fetch posts from Supabase and display them in order by id
 async function loadPosts() {
   try {
     const response = await fetch('/.netlify/functions/get-posts');
@@ -58,14 +59,39 @@ async function loadPosts() {
     posts.forEach(post => {
       const postElement = document.createElement('div');
       postElement.classList.add('post');
-      postElement.textContent = post.content;  // Display the post content
-      feed.appendChild(postElement);  // Add each post to the feed
+
+      // Add profile picture, name, and timestamp
+      const postHeader = document.createElement('div');
+      postHeader.classList.add('post-header');
+      
+      const profileImg = document.createElement('img');
+      profileImg.classList.add('profile-img');
+      profileImg.src = post.profilePictureUrl;  // Assuming profile picture URL is available
+
+      const posterName = document.createElement('span');
+      posterName.classList.add('poster-name');
+      posterName.textContent = post.posterName;  // Assuming poster name is available
+
+      const timestamp = document.createElement('span');
+      timestamp.classList.add('timestamp');
+      timestamp.textContent = new Date(post.timestamp).toLocaleString();  // Format the timestamp
+
+      // Append profile, name, and timestamp to the post header
+      postHeader.appendChild(profileImg);
+      postHeader.appendChild(posterName);
+      postHeader.appendChild(timestamp);
+
+      // Add post content
+      const postContent = document.createElement('p');
+      postContent.textContent = post.content;  // Display the post content
+
+      // Append header and content to the post element
+      postElement.appendChild(postHeader);
+      postElement.appendChild(postContent);
+
+      feed.appendChild(postElement);  // Add the post to the feed
     });
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
 }
-
-window.onload = function() {
-  loadPosts();  // Fetch and display posts when the page loads
-};
