@@ -73,5 +73,21 @@ document.getElementById('postForm').addEventListener('submit', async function(ev
       alert('Failed to add post: ' + result.message);
     }
   }
+
+    // Fetch posts from the get-posts function
+async function loadPosts() {
+  const response = await fetch('/.netlify/functions/get-posts');
+  const posts = await response.json();
+
+  const feed = document.getElementById('feed');
+  posts.forEach(post => {
+    const postElement = document.createElement('div');
+    postElement.classList.add('post');
+    postElement.textContent = post.content;
+    feed.appendChild(postElement);
+  });
+}
+
+loadPosts(); // Call the function to load posts on page load
 });
   
