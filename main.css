@@ -1,153 +1,153 @@
+/* General Styles */
 body {
-    background-color: #222;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+  font-family: Arial, sans-serif;
+  background-color: #1c1c1c;
+  color: white;
+  margin: 0;
+  padding: 0;
 }
 
 header {
-    background-color: #333;
-    padding: 10px 0;
-    position: fixed; /* Fix the header to the top */
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* Ensure it's above the content */
+  background-color: #333;
+  padding: 15px;
 }
 
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+header nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
+header nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+header nav a:hover {
+  text-decoration: underline;
 }
 
 h1 {
-    font-size: 48px;
-    font-weight: bold;
-    margin: 20px 0;
+  text-align: center;
+  color: white;
+  margin-top: 30px;
 }
 
 .feed-container {
-    width: 50%;
-    margin: auto;
-    flex: 1;
-    padding-top: 60px; /* Add padding to the top to prevent content from hiding behind the header */
+  padding: 20px;
 }
 
 #feed {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 10px;
+  margin-top: 20px;
 }
 
-.post {
-    background-color: #333;
-    padding: 15px;
-    border-radius: 5px;
-    text-align: left;
+#feed .post {
+  margin: 10px 0;
+  padding: 15px;
+  background-color: #333;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-#footer-section {
-    background-color: #333;
-    padding: 20px;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-    z-index: 1000; /* Ensure it's above the content */
+#feed .post:hover {
+  background-color: #444;
 }
 
-footer {
-    color: white;
-    font-size: 14px;
-    text-align: center;
-    width: 100%;
-}
-
-/* Add Post Button Style */
+/* Add Post Button */
 .add-post-btn {
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 30px;
-    position: fixed;
-    bottom: 80px;  /* Adjust this to prevent overlap with footer */
-    right: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;  /* Make sure the button is on top */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
 }
 
-/* Popup Layer and Form Styling */
+.add-post-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Popup Styles */
 .popup-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Increased opacity for stronger blur */
-    backdrop-filter: blur(10px); /* Added backdrop blur effect */
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9; /* Lower than the button */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
 }
 
 .popup {
-    background-color: #333;
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 400px;
-    color: white;
-    text-align: center;
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Ensure the content inside the popup is centered horizontally */
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  color: black;
+}
+
+.popup h2 {
+  margin-top: 0;
 }
 
 .popup textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    background-color: #444;
-    color: white;
-    border: 1px solid #555;
-    border-radius: 5px;
-    font-size: 16px;
-    resize: none; /* Prevent resizing of textarea */
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  resize: none;
 }
 
 .popup button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .popup button:hover {
-    background-color: #45a049;
+  background-color: #0056b3;
 }
+
+/* Post Content Popup (for showing clicked post content) */
+#postContentPopup .popup-content {
+  white-space: pre-wrap; /* Preserve formatting for post content */
+  font-size: 16px;
+}
+
+/* Footer Section */
+#footer-section {
+  background-color: #333;
+  padding: 10px 0;
+  text-align: center;
+}
+
+footer p {
+  color: white;
+  margin: 0;
+}
+
+/* Style for closing the popups when clicking outside */
+#postContentPopup .popup, #popupLayer .popup {
+  cursor: pointer;
+}
+
+#popupLayer, #postContentPopup {
+  display: none;
+}
+
+.popup-layer.active {
+  display: flex;
+}
+
