@@ -1,1 +1,8 @@
+[build]
+  functions = "netlify/functions"
+  publish = "build"  # Adjust this if you're using a build process (e.g., Webpack, React, etc.)
 
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
