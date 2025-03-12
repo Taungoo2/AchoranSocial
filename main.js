@@ -13,9 +13,9 @@ document.getElementById('popupLayer').addEventListener('click', function(event) 
 // Handling the post form submission
 document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
-
+    
     const postContent = document.getElementById('postContent').value;
-
+    
     if (postContent.trim() !== '') {
         const newPost = {
             content: postContent,
@@ -33,15 +33,8 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         .then(data => {
             console.log('Post added:', data);
 
-            // Create a post element and display the content
-            const newPostElement = document.createElement('div');
-            newPostElement.classList.add('post');
-            newPostElement.textContent = newPost.content; // Display the content of the new post
-            newPostElement.addEventListener('click', function() {
-                showPostPopup(newPost.content); // Show post content in a popup when clicked
-            });
-
-            document.getElementById('feed').prepend(newPostElement);
+            // Reload posts after adding a new one
+            loadPosts();  // Refresh the feed
 
             document.getElementById('postForm').reset();
             document.getElementById('popupLayer').style.display = 'none';
@@ -52,39 +45,30 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
     }
 });
 
-// Function to show a post content in a popup
-function showPostPopup(content) {
-    const postPopup = document.getElementById('postContentPopup');
-    postPopup.querySelector('.popup-content').textContent = content; // Set the content in the popup
-    postPopup.style.display = 'flex'; // Show the popup
-}
-
-// Handling the closing of the post content popup if clicked outside the popup content
-document.getElementById('postContentPopup').addEventListener('click', function(event) {
-    if (event.target === document.getElementById('postContentPopup')) {
-        document.getElementById('postContentPopup').style.display = 'none'; // Hide the popup
-    }
-});
-
 // Fetch posts from the get-posts function
 async function loadPosts() {
-    const response = await fetch('/.netlify/functions/get-posts');
-    const posts = await response.json();
+    try {
+        const response = await fetch('/.netlify/functions/get-posts');
+        const posts = await response.json();
 
-    const feed = document.getElementById('feed');
-    posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.classList.add('post');
-        postElement.textContent = post.content; // Display post content
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';  // Clear current posts before adding the new ones
 
-        // Add event listener for post click to show in popup
-        postElement.addEventListener('click', function() {
-            showPostPopup(post.content);
+        posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.textContent = post.content;  // Display the content from the 'content' column
+            feed.appendChild(postElement);
         });
-
-        feed.appendChild(postElement);
-    });
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+    }
 }
 
-loadPosts(); // Call the function to load posts on page load
+// Call loadPosts() when the page loads
+window.onload = function() {
+    loadPosts();  // Fetch and display posts when the page loads
+};
+
+
 
