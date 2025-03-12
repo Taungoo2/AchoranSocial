@@ -50,7 +50,10 @@ async function loadPosts() {
     try {
         alert("loadPosts function is being called!"); // Alert to check if the function is triggered
         const response = await fetch('/.netlify/functions/get-posts');
+        
+        // Log the raw response to see what data is returned
         const posts = await response.json();
+        console.log("Fetched posts: ", posts);  // Debugging log to check the posts' data
 
         const feed = document.getElementById('feed');
         feed.innerHTML = '';  // Clear current posts before adding the new ones
@@ -63,16 +66,23 @@ async function loadPosts() {
             feed.appendChild(emptySlot);
         }
 
-        // Add posts to the feed ordered by 'id'
-        let i = 0; // Index for the posts
-        while (i < posts.length && i < 6) {  // Only loop for 6 posts max
-            const post = posts[i];
-            const postElement = document.createElement('div');
-            postElement.classList.add('post');
-            postElement.textContent = post.content;  // Display post content
-            feed.children[i].textContent = post.content;  // Replace empty slots with actual content
-            i++;
+        // Check if posts have content
+        if (posts && posts.length > 0) {
+            // Add posts to the feed ordered by 'id'
+            let i = 0; // Index for the posts
+            while (i < posts.length && i < 6) {  // Only loop for 6 posts max
+                const post = posts[i];
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.textContent = post.content;  // Display post content
+                console.log(`Adding post: ${post.content}`); // Debugging log to check the content
+                feed.children[i].textContent = post.content;  // Replace empty slots with actual content
+                i++;
+            }
+        } else {
+            console.log("No posts found or empty posts array.");
         }
+
     } catch (error) {
         console.error('Error fetching posts:', error);
     }
