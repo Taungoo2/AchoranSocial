@@ -53,8 +53,15 @@ async function loadPosts() {
         const posts = await response.json();
 
         const feed = document.getElementById('feed');
+        
+        if (!feed) {
+            console.error('Feed container not found!');
+            return;
+        }
+
         feed.innerHTML = '';  // Clear current posts before adding the new ones
 
+        console.log('Adding six blank slots');
         // Add six empty slots to the feed with text "[blank]"
         for (let i = 0; i < 6; i++) {
             const emptySlot = document.createElement('div');
@@ -63,6 +70,9 @@ async function loadPosts() {
             feed.appendChild(emptySlot);
         }
 
+        // Log the posts to see if we have data
+        console.log('Fetched posts:', posts);
+
         // Add posts to the feed ordered by 'id'
         let i = 0; // Index for the posts
         while (i < posts.length && i < 6) {  // Only loop for 6 posts max
@@ -70,6 +80,7 @@ async function loadPosts() {
             const postElement = document.createElement('div');
             postElement.classList.add('post');
             postElement.textContent = post.content;  // Display post content
+            console.log(`Replacing slot ${i} with post: ${post.content}`);
             feed.children[i].textContent = post.content;  // Replace empty slots with actual content
             i++;
         }
