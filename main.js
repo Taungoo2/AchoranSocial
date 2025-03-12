@@ -11,78 +11,70 @@ document.getElementById('popupLayer').addEventListener('click', function(event) 
 });
 
 // Handling the post form submission
-document.getElementById('postForm').addEventListener('submit', async function(event) {
+document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    
-    const postContent = document.getElementById('postContent').value.trim();
 
-    if (postContent !== '') {
+    const postContent = document.getElementById('postContent').value;
+
+    if (postContent.trim() !== '') {
         const newPost = {
             content: postContent,
-            timestamp: new Date().toISOString() // Add timestamp
+            timestamp: new Date().toISOString() // Add a timestamp to each post
         };
 
-        try {
-            const response = await fetch('/.netlify/functions/add-post', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newPost),
-            });
+        fetch('/.netlify/functions/add-post', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newPost), // Send the new post content
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Post added:', data);
 
-            const result = await response.json();
-            console.log('Server response:', result);
+            // Reload posts after adding a new one
+            loadPosts();  // Refresh the feed
 
-            if (response.ok) {
-                // Add the new post immediately to the feed
-                addPostToFeed(newPost);
-
-                // Reset the form and close the popup
-                document.getElementById('postForm').reset();
-                document.getElementById('popupLayer').style.display = 'none';
-
-                // Reload all posts (optional, but ensures consistency)
-                loadPosts();
-            } else {
-                alert('Failed to add post: ' + result.message);
-            }
-        } catch (error) {
+            document.getElementById('postForm').reset();
+            document.getElementById('popupLayer').style.display = 'none';
+        })
+        .catch(error => {
             console.error('Error:', error);
-        }
+        });
     }
 });
 
-// Function to fetch and display posts
+// Fetch posts from the get-posts function
 async function loadPosts() {
     try {
         const response = await fetch('/.netlify/functions/get-posts');
-        const posts = await response.json();
+        const posts = await response.json();  // posts is an array of post objects
 
         const feed = document.getElementById('feed');
-        feed.innerHTML = '';  // Clear current posts before adding new ones
+        feed.innerHTML = '';  // Clear current posts before adding the new ones
 
-        posts.forEach(post => {
-            addPostToFeed(post);
-        });
+        let i = 0;
+        while (i < posts.length) {
+            const post = posts[i];
+            addPostToFeed(post);  // Add the post to the feed
+            i++;  // Move to the next post
+        }
     } catch (error) {
         console.error('Error fetching posts:', error);
     }
 }
 
-// Function to add a single post to the feed
+// Function to add a post to the feed
 function addPostToFeed(post) {
-    const feed = document.getElementById('feed');
-
     const postElement = document.createElement('div');
     postElement.classList.add('post');
-    postElement.textContent = post.content;
-
-    // Add new post to the top
-    feed.prepend(postElement);
+    postElement.textContent = post.content;  // Display the content from the 'content' column
+    document.getElementById('feed').appendChild(postElement);
 }
 
 // Call loadPosts() when the page loads
 window.onload = function() {
     loadPosts();  // Fetch and display posts when the page loads
 };
-
 
