@@ -1,4 +1,3 @@
-// netlify/functions/add-post.js
 const { createClient } = require('@supabase/supabase-js');
 
 // Initialize Supabase client using Netlify environment variables
@@ -14,7 +13,7 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Parse the request body
+    // Parse the request body to get the content
     const { content } = JSON.parse(event.body);
 
     // Check if content is empty
@@ -25,28 +24,28 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Insert the post into the 'posts' table
+    // Insert the post content into the 'posts' table in Supabase
     const { data, error } = await supabase
-      .from('posts')  // Ensure this matches your actual table name in Supabase
-      .insert([{ content }]); // Insert post content
+      .from('posts')  // Make sure the table name matches your Supabase table
+      .insert([{ content }]); // Insert the post content
 
-    // Debugging logs
-    console.log('Supabase Insert Response:', data, error);
-
+    // Check if there was an error with the insert
     if (error) {
-      console.error('Supabase Error:', error.message);
+      console.error('Supabase Insert Error:', error.message);
       return {
         statusCode: 500,
         body: JSON.stringify({ message: 'Error adding post', error: error.message }),
       };
     }
 
+    // Return the success message along with inserted data
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Post added successfully', data }),
     };
 
   } catch (error) {
+    // General error handling
     console.error('Server Error:', error.message);
     return {
       statusCode: 500,
@@ -54,5 +53,6 @@ exports.handler = async function(event, context) {
     };
   }
 };
+
 
 
