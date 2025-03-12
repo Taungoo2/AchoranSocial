@@ -48,30 +48,20 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
 // Fetch posts from Supabase and display them in order by id
 async function loadPosts() {
     try {
-        // Fetch posts from the 'posts' table, ordered by 'id' ascending
+        alert("loadPosts function is being called!"); // Alert to check if the function is triggered
         const response = await fetch('/.netlify/functions/get-posts');
         const posts = await response.json();
 
         const feed = document.getElementById('feed');
-        
-        if (!feed) {
-            console.error('Feed container not found!');
-            return;
-        }
-
         feed.innerHTML = '';  // Clear current posts before adding the new ones
 
-        console.log('Adding six blank slots');
-        // Add six empty slots to the feed with text "[blank]"
+        // Add six empty slots to the feed
         for (let i = 0; i < 6; i++) {
             const emptySlot = document.createElement('div');
             emptySlot.classList.add('post');
-            emptySlot.textContent = '[blank]';  // Add [blank] text to indicate empty slots
+            emptySlot.textContent = '[blank]'; // Display blank text
             feed.appendChild(emptySlot);
         }
-
-        // Log the posts to see if we have data
-        console.log('Fetched posts:', posts);
 
         // Add posts to the feed ordered by 'id'
         let i = 0; // Index for the posts
@@ -80,7 +70,6 @@ async function loadPosts() {
             const postElement = document.createElement('div');
             postElement.classList.add('post');
             postElement.textContent = post.content;  // Display post content
-            console.log(`Replacing slot ${i} with post: ${post.content}`);
             feed.children[i].textContent = post.content;  // Replace empty slots with actual content
             i++;
         }
