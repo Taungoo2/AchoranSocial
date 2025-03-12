@@ -45,5 +45,33 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
             console.error('Error:', error);
         });
     }
+// Inside main.js or another script file
+document.getElementById('postForm').addEventListener('submit', async function(event) {
+  event.preventDefault();
+  
+  const postContent = document.getElementById('postContent').value;
+
+  if (postContent.trim() !== '') {
+    // Send post data to the Netlify function
+    const response = await fetch('/.netlify/functions/add-post', {
+      method: 'POST',
+      body: JSON.stringify({ content: postContent }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      // Add the new post to the feed on success
+      const newPost = document.createElement('div');
+      newPost.classList.add('post');
+      newPost.textContent = postContent;
+      document.getElementById('feed').prepend(newPost);
+      
+      // Reset the form
+      document.getElementById('postForm').reset();
+    } else {
+      alert('Failed to add post: ' + result.message);
+    }
+  }
 });
   
