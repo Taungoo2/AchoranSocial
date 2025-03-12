@@ -1,35 +1,33 @@
-// netlify/functions/add-post.js
+// netlify/functions/get-posts.js
 const { createClient } = require('@supabase/supabase-js');
 
-// Get Supabase URL and Anon Key from environment variables
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Initialize Supabase client
+const supabase = createClient('YOUR_SUPABASE_URL', 'YOUR_SUPABASE_ANON_KEY');
 
-exports.handler = async (event, context) => {
-  if (event.httpMethod === 'POST') {
-    const { content } = JSON.parse(event.body); // Get content from the request body
-
-    // Insert the new post into the "posts" table in Supabase
+exports.handler = async function(event, context) {
+  try {
+    // Fetch posts from Supabase, sorted by timestamp in descending order
     const { data, error } = await supabase
-      .from('posts')
-      .insert([{ content }]);
+      .from('posts')  // Ensure this matches your table name in Supabase
+      .select('content, timestamp')  // Fetch only the 'content' and 'timestamp' columns
+      .order('timestamp', { ascending: false });  // Sort by timestamp (newest first)
 
     if (error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: 'Failed to add post', error }),
+        body: JSON.stringify({ message: 'Error fetching posts', error: error.message }),
       };
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Post added successfully!', post: data }),
+      body: JSON.stringify(data),  // Return posts as JSON
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Server error', error: error.message }),
     };
   }
-
-  return {
-    statusCode: 405,
-    body: JSON.stringify({ message: 'Method Not Allowed' }),
-  };
 };
+
