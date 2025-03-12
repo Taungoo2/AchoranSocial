@@ -54,24 +54,13 @@ async function loadPosts() {
     const feed = document.getElementById('feed');
     feed.innerHTML = '';  // Clear current posts before adding the new ones
     
-    // Add six empty slots (or more if you want)
-    for (let i = 0; i < 6; i++) {
-      const emptySlot = document.createElement('div');
-      emptySlot.classList.add('post');
-      emptySlot.textContent = '[blank]';  // Placeholder for the posts
-      feed.appendChild(emptySlot);
-    }
-
-    // Populate the posts in reverse order (newest to oldest)
-    let i = 0;
-    while (i < posts.length && i < 6) {  // Only loop for 6 posts max
-      const post = posts[i];
+    // Loop through all posts and display them
+    posts.forEach(post => {
       const postElement = document.createElement('div');
       postElement.classList.add('post');
       postElement.textContent = post.content;  // Display the post content
-      feed.children[i].textContent = post.content;  // Replace empty slot with actual content
-      i++;
-    }
+      feed.appendChild(postElement);  // Add each post to the feed
+    });
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
@@ -80,4 +69,3 @@ async function loadPosts() {
 window.onload = function() {
   loadPosts();  // Fetch and display posts when the page loads
 };
-
