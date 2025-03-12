@@ -47,48 +47,37 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
 
 // Fetch posts from Supabase and display them in order by id
 async function loadPosts() {
-    try {
-        alert("loadPosts function is being called!"); // Alert to check if the function is triggered
-        const response = await fetch('/.netlify/functions/get-posts');
-        
-        // Log the raw response to see what data is returned
-        const posts = await response.json();
-        console.log("Fetched posts: ", posts);  // Debugging log to check the posts' data
-
-        const feed = document.getElementById('feed');
-        feed.innerHTML = '';  // Clear current posts before adding the new ones
-
-        // Add six empty slots to the feed
-        for (let i = 0; i < 6; i++) {
-            const emptySlot = document.createElement('div');
-            emptySlot.classList.add('post');
-            emptySlot.textContent = '[blank]'; // Display blank text
-            feed.appendChild(emptySlot);
-        }
-
-        // Check if posts have content
-        if (posts && posts.length > 0) {
-            // Add posts to the feed ordered by 'id'
-            let i = 0; // Index for the posts
-            while (i < posts.length && i < 6) {  // Only loop for 6 posts max
-                const post = posts[i];
-                const postElement = document.createElement('div');
-                postElement.classList.add('post');
-                postElement.textContent = post.content;  // Display post content
-                console.log(`Adding post: ${post.content}`); // Debugging log to check the content
-                feed.children[i].textContent = post.content;  // Replace empty slots with actual content
-                i++;
-            }
-        } else {
-            console.log("No posts found or empty posts array.");
-        }
-
-    } catch (error) {
-        console.error('Error fetching posts:', error);
+  try {
+    const response = await fetch('/.netlify/functions/get-posts');
+    const posts = await response.json();
+    
+    const feed = document.getElementById('feed');
+    feed.innerHTML = '';  // Clear current posts before adding the new ones
+    
+    // Add six empty slots (or more if you want)
+    for (let i = 0; i < 6; i++) {
+      const emptySlot = document.createElement('div');
+      emptySlot.classList.add('post');
+      emptySlot.textContent = '[blank]';  // Placeholder for the posts
+      feed.appendChild(emptySlot);
     }
+
+    // Populate the posts in reverse order (newest to oldest)
+    let i = 0;
+    while (i < posts.length && i < 6) {  // Only loop for 6 posts max
+      const post = posts[i];
+      const postElement = document.createElement('div');
+      postElement.classList.add('post');
+      postElement.textContent = post.content;  // Display the post content
+      feed.children[i].textContent = post.content;  // Replace empty slot with actual content
+      i++;
+    }
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+  }
 }
 
-// Call loadPosts() when the page loads
 window.onload = function() {
-    loadPosts();  // Fetch and display posts when the page loads
+  loadPosts();  // Fetch and display posts when the page loads
 };
+
