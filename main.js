@@ -50,16 +50,22 @@ async function loadPosts() {
     try {
         const response = await fetch('/.netlify/functions/get-posts');
         const posts = await response.json();
+        console.log(posts);  // Log the posts to check the data structure
 
         const feed = document.getElementById('feed');
         feed.innerHTML = '';  // Clear current posts before adding the new ones
 
-        posts.forEach(post => {
-            const postElement = document.createElement('div');
-            postElement.classList.add('post');
-            postElement.textContent = post.content;  // Display the content from the 'content' column
-            feed.appendChild(postElement);
-        });
+        // Check if posts are fetched successfully
+        if (Array.isArray(posts)) {
+            posts.forEach(post => {
+                const postElement = document.createElement('li');  // Use list items for displaying posts
+                postElement.classList.add('post');
+                postElement.textContent = post.content;  // Display the content from the 'content' column
+                feed.appendChild(postElement);
+            });
+        } else {
+            console.error('Failed to load posts: Invalid response');
+        }
     } catch (error) {
         console.error('Error fetching posts:', error);
     }
