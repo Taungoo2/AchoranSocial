@@ -25,13 +25,14 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         fetch('/.netlify/functions/add-post', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newPost), // Send the new post content
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Post added:', data);
+            body: JSON.stringify({ content: postContent }),
+})
+            .then(response => response.json())
+            .then(data => {
+    console.log('Server response:', data); // Log response
+})
 
             // Reload posts after adding a new one
             loadPosts();  // Refresh the feed
@@ -40,7 +41,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
             document.getElementById('popupLayer').style.display = 'none';
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Fetch Error:', error);
         });
     }
 });
