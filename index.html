@@ -1,48 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achoran Social</title>
-    <link rel="stylesheet" href="main.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed - Achoran Social</title>
+  <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Feed</a>
-            <a href="#">Profile</a>
-        </nav>
-    </header>
 
-    <main>
-        <h1>Achoran Social</h1>
-        <div id="feed" class="feed-container">
-            <!-- This will be filled dynamically by JavaScript -->
-        </div>
-        
-        <!-- Add Post Button -->
-        <div class="add-post-btn" id="addPostBtn">
-            <span>+</span>
-        </div>
+  <!-- Header Section -->
+  <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+    </nav>
+  </header>
 
-        <!-- Popup for Adding Post -->
-        <div id="popupLayer" class="popup-layer">
-            <div class="popup">
-                <h2>Post something!</h2>
-                <form id="postForm">
-                    <textarea id="postContent" placeholder="What's on your mind?" required></textarea>
-                    <button type="submit">Post</button>
-                </form>
-            </div>
-        </div>
-    </main>
+  <div class="feed-container">
+    <h1>Achoran Social Feed</h1>
 
-    <footer id="footer-section">
-        <footer>© Achoran Media Network - All Rights Reserved</footer>
+    <!-- Feed Posts -->
+    <div id="feed"></div>
+  </div>
+
+  <!-- Add Post Button -->
+  <div id="addPostBtn" class="add-post-btn">+</div>
+
+  <!-- Popup Layer -->
+  <div id="popupLayer" class="popup-layer">
+    <div class="popup">
+      <h2>Create a Post</h2>
+      <form id="postForm" netlify>
+        <textarea id="postContent" rows="4" placeholder="Write something..."></textarea>
+        <button type="submit" id="postBtn">Post</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <section id="footer-section">
+    <footer>
+      <p>Achoran Media Network - All rights reserved</p>
     </footer>
+  </section>
 
-    <script src="main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
 
