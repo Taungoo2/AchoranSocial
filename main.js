@@ -49,7 +49,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
 async function loadPosts() {
     try {
         alert("loadPosts function is being called!"); // Alert to check if the function is triggered
-        const response = await fetch('/.netlify/functions/add-post');
+        const response = await fetch('/.netlify/functions/get-posts');
         
         // Log the raw response to see what data is returned
         const posts = await response.json();
