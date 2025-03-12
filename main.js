@@ -55,11 +55,11 @@ async function loadPosts() {
         const feed = document.getElementById('feed');
         feed.innerHTML = '';  // Clear current posts before adding the new ones
 
-        // Add six empty slots to the feed
+        // Add six empty slots to the feed with text "[blank]"
         for (let i = 0; i < 6; i++) {
             const emptySlot = document.createElement('div');
             emptySlot.classList.add('post');
-            emptySlot.textContent = `Slot ${i + 1} (Empty)`;
+            emptySlot.textContent = '[blank]';  // Add [blank] text to indicate empty slots
             feed.appendChild(emptySlot);
         }
 
