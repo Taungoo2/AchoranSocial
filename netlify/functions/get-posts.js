@@ -9,7 +9,7 @@ exports.handler = async function(event, context) {
     const { data, error } = await supabase
       .from('posts')  // Make sure this matches your Supabase table name
       .select('id, content')  // Select both 'id' and 'content' to show the post and its ID
-      .order('id', { ascending: false });  // Order by ID, newest first
+      .order('id', { ascending: true });  // Order by ID, newest first
 
     if (error) {
       console.error('Error fetching posts:', error.message);
