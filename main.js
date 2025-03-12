@@ -1,16 +1,16 @@
 // Handling the Add Post button and popup
 document.getElementById('addPostBtn').addEventListener('click', function() {
     document.getElementById('popupLayer').style.display = 'flex'; // Show the popup
-  });
-  
-  // Handling the closing of the popup if clicked outside the popup content
-  document.getElementById('popupLayer').addEventListener('click', function(event) {
+});
+
+// Handling the closing of the popup if clicked outside the popup content
+document.getElementById('popupLayer').addEventListener('click', function(event) {
     if (event.target === document.getElementById('popupLayer')) {
-      document.getElementById('popupLayer').style.display = 'none'; // Hide the popup
+        document.getElementById('popupLayer').style.display = 'none'; // Hide the popup
     }
-  });
-  
-  // Handling the post form submission
+});
+
+// Handling the post form submission
 document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
     
@@ -45,36 +45,9 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
             console.error('Error:', error);
         });
     }
-// Inside main.js or another script file
-document.getElementById('postForm').addEventListener('submit', async function(event) {
-  event.preventDefault();
-  
-  const postContent = document.getElementById('postContent').value;
+});
 
-  if (postContent.trim() !== '') {
-    // Send post data to the Netlify function
-    const response = await fetch('/.netlify/functions/add-post', {
-      method: 'POST',
-      body: JSON.stringify({ content: postContent }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      // Add the new post to the feed on success
-      const newPost = document.createElement('div');
-      newPost.classList.add('post');
-      newPost.textContent = postContent;
-      document.getElementById('feed').prepend(newPost);
-      
-      // Reset the form
-      document.getElementById('postForm').reset();
-    } else {
-      alert('Failed to add post: ' + result.message);
-    }
-  }
-
-    // Fetch posts from the get-posts function
+// Fetch posts from the get-posts function
 async function loadPosts() {
   const response = await fetch('/.netlify/functions/get-posts');
   const posts = await response.json();
@@ -89,5 +62,4 @@ async function loadPosts() {
 }
 
 loadPosts(); // Call the function to load posts on page load
-});
-  
+
