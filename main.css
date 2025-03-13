@@ -47,7 +47,7 @@ h1 {
     width: 100%;
     text-align: center;
     margin-top: 80px; /* Added top margin to avoid overlap with header */
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 .feed-container {
@@ -59,7 +59,7 @@ h1 {
 }
 
 #feed {
-    margin-top: 20px;
+    margin-top: 8px;
     display: flex;
     flex-direction: column-reverse;
     gap: 10px;
