@@ -21,9 +21,10 @@
 
     <script>
             // Set window size to not exceed the box dimensions (800px by 800px)
-        window.onload = function() {
-            window.resizeTo(800, 800);  // Set the window to be 800x800 px
-            window.moveTo((screen.width - 800) / 2, (screen.height - 800) / 2); // Center the window
+         window.onload = function() {
+            if (window.top === window.self) {  // Check if it's the main window
+                window.open(window.location.href, 'Login Window', 'width=800,height=800,menubar=no,resizable=no,scrollbars=no,status=no');
+            }
         };
     </script>
 </body>
