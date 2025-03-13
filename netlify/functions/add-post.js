@@ -13,8 +13,16 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Parse the request body to get the content
-    const { content } = JSON.parse(event.body);
+    // Parse the request body to get the content and user_id
+    const { content, user_id } = JSON.parse(event.body);
+
+    // Check if the user is logged in
+    if (!user_id) {
+      return {
+        statusCode: 401, // Unauthorized
+        body: JSON.stringify({ message: 'User must be logged in to post' }),
+      };
+    }
 
     // Check if content is empty
     if (!content || content.trim() === '') {
@@ -24,10 +32,10 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Insert the post content into the 'posts' table in Supabase
+    // Insert the post content and user_id into the 'posts' table in Supabase
     const { data, error } = await supabase
-      .from('posts')  // Make sure the table name matches your Supabase table
-      .insert([{ content }]); // Insert the post content
+      .from('posts')  // Ensure table name matches your Supabase setup
+      .insert([{ content, user_id }]); // Insert both content and user_id
 
     // Check if there was an error with the insert
     if (error) {
