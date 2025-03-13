@@ -47,6 +47,7 @@ h1 {
     width: 100%;
     text-align: center;
     margin-top: 80px; /* Added top margin to avoid overlap with header */
+    margin-bottom: 15px;
 }
 
 .feed-container {
