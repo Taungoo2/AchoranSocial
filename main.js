@@ -14,12 +14,20 @@ document.getElementById('popupLayer').addEventListener('click', function(event) 
 document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
     
-    const postContent = document.getElementById('postContent').value;
-    
-    if (postContent.trim() !== '') {
+    const postContent = document.getElementById('postContent').value.trim();
+    const userId = sessionStorage.getItem("user_id"); // Get user ID from sessionStorage
+
+    // Check if the user is logged in
+    if (!userId) {
+        alert("You must be logged in to post.");
+        return;
+    }
+
+    if (postContent !== '') {
         const newPost = {
             content: postContent,
-            timestamp: new Date().toISOString() // Add a timestamp to each post
+            timestamp: new Date().toISOString(), // Add timestamp
+            user_id: userId // Attach the user ID
         };
 
         fetch('/.netlify/functions/add-post', {
@@ -27,14 +35,14 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newPost), // Send the new post content
+            body: JSON.stringify(newPost), // Send the new post data
         })
         .then(response => response.json())
         .then(data => {
             console.log('Post added:', data);
 
             // Reload posts after adding a new one
-            loadPosts();  // Refresh the feed
+            loadPosts();  
 
             document.getElementById('postForm').reset();
             document.getElementById('popupLayer').style.display = 'none';
@@ -45,7 +53,6 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
     }
 });
 
-// Fetch posts from Supabase and display them in order by id
 // Fetch posts from Supabase and display them in order by id
 async function loadPosts() {
   try {
@@ -74,7 +81,7 @@ async function loadPosts() {
 
       const timestamp = document.createElement('span');
       timestamp.classList.add('timestamp');
-      timestamp.textContent = new Date(post.timestamp).toLocaleString();  // Format the timestamp
+      timestamp.textContent = new Date(post.timestamp).toLocaleString();  // Format timestamp
 
       // Append profile, name, and timestamp to the post header
       postHeader.appendChild(profileImg);
