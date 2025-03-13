@@ -11,6 +11,13 @@ body {
     overflow: hidden;
 }
 
+.title {
+    align-items: center;
+    width: 50%;
+    margin: auto;
+    flex: 1;
+    padding-top: 60px; 
+}
 #login-container {
     width: 100%;
     max-width: 800px;
