@@ -12,17 +12,40 @@ body {
     flex-direction: column;
 }
 
-/* Center the title */
-.title {
+/* Header */
+header {
+    background-color: #333;
+    padding: 10px 0;
+    position: fixed; /* Fix the header to the top */
+    top: 0;
+    left: 0;
     width: 100%;
-    text-align: center;
-    margin-top: 80px;     /* Added top margin to avoid overlap with header */
+    z-index: 1000; /* Ensure it's above the content */
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
 }
 
 h1 {
     font-size: 48px;
     font-weight: bold;
     margin: 20px 0;
+}
+
+/* Center the title */
+.title {
+    width: 100%;
+    text-align: center;
+    margin-top: 80px; /* Added top margin to avoid overlap with header */
 }
 
 .feed-container {
@@ -213,5 +236,6 @@ footer {
 .login-form button:hover {
     background-color: #45a049;
 }
+
 
 
