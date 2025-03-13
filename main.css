@@ -10,6 +10,7 @@ body {
     min-height: 100vh;
     overflow: hidden;
     flex-direction: column;
+    overflow-y: auto;  /* Allow scrolling */
 }
 
 /* Header */
@@ -53,6 +54,7 @@ h1 {
     margin: auto;
     flex: 1;
     padding-top: 60px; /* Add padding to the top to prevent content from hiding behind the header */
+    overflow-y: auto;  /* Allow scrolling */
 }
 
 #feed {
@@ -231,6 +233,7 @@ footer {
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
+    z-index: 1001;  /* Higher z-index than the footer */
 }
 
 .login-form button:hover {
