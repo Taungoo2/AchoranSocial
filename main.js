@@ -104,9 +104,12 @@ async function loadPosts() {
             const userId = post.user_id; // Retrieve user_id from post
             console.log("Post user_id:", userId); // Debugging log to verify the user_id
 
+            // Create a variable string for the profile image path
+            let profileImageUrl = `/Assets/${userId}.png`; // Default path based on user_id
+
             // Check if the user_id exists and is valid, else fallback to default image
             if (userId && userId !== null && userId !== undefined) {
-                profileImg.src = `/Assets/${String(userId)}.png`; // Use the user_id as a string for the image path
+                profileImg.src = profileImageUrl; // Use the generated string for the image URL
             } else {
                 profileImg.src = `/Assets/default.png`; // Fallback to a default image if user_id is missing
             }
