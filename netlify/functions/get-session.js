@@ -1,21 +1,21 @@
-const { createClient } = require('@supabase/supabase-js');
-
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const { createClient } = require("@supabase/supabase-js");
 
 exports.handler = async (event, context) => {
     try {
-        const { user } = await supabase.auth.getUser(event.headers.cookie);
+        const supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_ANON_KEY
+        );
 
-        if (!user) {
-            return {
-                statusCode: 401,
-                body: JSON.stringify({ error: "Not logged in" }),
-            };
+        const { data, error } = await supabase.auth.getSession(); // ✅ Correct function
+
+        if (error) {
+            throw new Error(error.message);
         }
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ user_id: user.id }),
+            body: JSON.stringify(data),
         };
     } catch (error) {
         return {
