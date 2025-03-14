@@ -111,7 +111,7 @@ async function loadPosts() {
             if (userId && userId !== null && userId !== undefined) {
                 profileImg.src = profileImageUrl; // Use the generated string for the image URL
             } else {
-                profileImg.src = `/Assets/default.png`; // Fallback to a default image if user_id is missing
+                profileImg.src = `/.Assets/default.png`; // Fallback to a default image if user_id is missing
             }
 
             const posterName = document.createElement("span");
