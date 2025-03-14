@@ -1,23 +1,27 @@
-// Function to fetch user session from the backend
+// Function to fetch user session from the backend (modified)
 async function fetchUserSession() {
     try {
-        const response = await fetch("/.netlify/functions/get-session", {
-            method: "GET",
+        // Fetch the session from the serverless function
+        const response = await fetch("/.netlify/functions/check-session", {
             credentials: "include", // Ensures cookies are sent
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
         const data = await response.json();
         console.log("Session Data:", data); // Debugging
 
-        if (data.user_id) {
-            return data.user_id;
+        if (data.loggedIn && data.userId) {
+            return data.userId; // Return the user ID if logged in
         } else {
             console.log("No active session found.");
-            return null;
+            return null; // Return null if no session is found
         }
     } catch (error) {
         console.error("Error fetching session:", error);
-        return null;
+        return null; // Return null if error occurs
     }
 }
 
