@@ -47,4 +47,26 @@ exports.handler = async (event) => {
         },
         body: JSON.stringify({ success: true }),
     };
+    exports.handler = async (event) => {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { username, password } = JSON.parse(event.body);
+
+    const { data, error } = await supabase
+        .from("users")
+        .select("id, password") 
+        .eq("username", username)
+        .single();
+
+    if (error || !data || data.password !== password) {
+        return { statusCode: 401, body: JSON.stringify({ success: false }) };
+    }
+
+    return {
+        statusCode: 200,
+        headers: {
+            "Set-Cookie": `session_id=${data.id}; Path=/; HttpOnly; Secure; SameSite=Strict`,
+        },
+        body: JSON.stringify({ success: true }),
+    };
+};
 };
