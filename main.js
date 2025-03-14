@@ -1,19 +1,6 @@
-// Function to get a cookie by name
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-// Function to check if the user is logged in
+// Function to get user ID from sessionStorage
 function getUserId() {
-    let sessionCookie = getCookie("session_id");  // Try to get the session cookie
-    let userId = sessionStorage.getItem("user_id"); // Fallback to sessionStorage
-
-    console.log("Session Cookie:", sessionCookie);
-    console.log("Session Storage User ID:", userId);
-
-    return sessionCookie || userId; // Use either the cookie or sessionStorage
+    return sessionStorage.getItem("user_id"); // Retrieve user ID
 }
 
 // Handling the Add Post button and popup
@@ -33,7 +20,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
     
     const postContent = document.getElementById('postContent').value.trim();
-    const userId = getUserId();  // Get user ID from cookies or sessionStorage
+    const userId = getUserId();  // Get user ID from sessionStorage
 
     if (!userId) {
         alert("You must be logged in to post.");
@@ -119,6 +106,18 @@ async function loadPosts() {
 // Run when the page loads
 window.onload = function() {
     loadPosts();
-    console.log("All Cookies:", document.cookie);  // Debugging: Log all cookies
+    
+    // Fetch user session from backend if necessary
+    fetch('/.netlify/functions/get-session')
+        .then(response => response.json())
+        .then(data => {
+            if (data.user_id) {
+                sessionStorage.setItem("user_id", data.user_id);
+                console.log("User session restored:", data.user_id);
+            } else {
+                console.log("No active session found.");
+            }
+        })
+        .catch(error => console.error('Error fetching session:', error));
 };
 
