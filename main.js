@@ -104,7 +104,7 @@ async function loadPosts() {
                 // Use the user_id to construct the profile picture path
                 const profileImg = document.createElement("img");
                 profileImg.classList.add("profile-img");
-                profileImg.src = `/Assets/${post.user_id}.png`; // Profile picture named after user_id in /Assets folder
+                profileImg.src = `/Assets/${String(post.user_id)}.png`; // Profile picture named after user_id in /Assets folder
 
                 const posterName = document.createElement("span");
                 posterName.classList.add("poster-name");
