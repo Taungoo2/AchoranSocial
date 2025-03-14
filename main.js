@@ -85,53 +85,55 @@ async function loadPosts() {
         const response = await fetch("/.netlify/functions/get-posts");
         const posts = await response.json();
 
-        console.log(posts); // Debugging to check the response format
+        const feed = document.getElementById("feed");
+        feed.innerHTML = ""; // Clear current posts before adding new ones
 
-        // Check if posts is an array
-        if (Array.isArray(posts)) {
-            const feed = document.getElementById("feed");
-            feed.innerHTML = ""; // Clear current posts before adding new ones
+        // Loop through all posts and display them
+        posts.forEach(post => {
+            const postElement = document.createElement("div");
+            postElement.classList.add("post");
 
-            // Loop through all posts and display them
-            posts.forEach(post => {
-                const postElement = document.createElement("div");
-                postElement.classList.add("post");
+            // Add profile picture, name, and timestamp
+            const postHeader = document.createElement("div");
+            postHeader.classList.add("post-header");
 
-                // Add profile picture, name, and timestamp
-                const postHeader = document.createElement("div");
-                postHeader.classList.add("post-header");
+            // Validate user_id, if it's null or undefined, assign a fallback image
+            const profileImg = document.createElement("img");
+            profileImg.classList.add("profile-img");
 
-                // Use the user_id to construct the profile picture path
-                const profileImg = document.createElement("img");
-                profileImg.classList.add("profile-img");
-                profileImg.src = `/Assets/${String(post.user_id)}.png`; // Profile picture named after user_id in /Assets folder
+            const userId = post.user_id; // Retrieve user_id from post
+            console.log("Post user_id:", userId); // Debugging log to verify the user_id
 
-                const posterName = document.createElement("span");
-                posterName.classList.add("poster-name");
-                posterName.textContent = post.posterName || "Anonymous"; // Default name
+            // Check if the user_id exists and is valid, else fallback to default image
+            if (userId && userId !== null && userId !== undefined) {
+                profileImg.src = `/Assets/${String(userId)}.png`; // Use the user_id as a string for the image path
+            } else {
+                profileImg.src = `/Assets/default.png`; // Fallback to a default image if user_id is missing
+            }
 
-                const timestamp = document.createElement("span");
-                timestamp.classList.add("timestamp");
-                timestamp.textContent = new Date(post.timestamp).toLocaleString(); // Format timestamp
+            const posterName = document.createElement("span");
+            posterName.classList.add("poster-name");
+            posterName.textContent = post.posterName || "Anonymous"; // Default name if not provided
 
-                // Append profile, name, and timestamp to the post header
-                postHeader.appendChild(profileImg);
-                postHeader.appendChild(posterName);
-                postHeader.appendChild(timestamp);
+            const timestamp = document.createElement("span");
+            timestamp.classList.add("timestamp");
+            timestamp.textContent = new Date(post.timestamp).toLocaleString(); // Format timestamp
 
-                // Add post content
-                const postContent = document.createElement("p");
-                postContent.textContent = post.content; // Display the post content
+            // Append profile, name, and timestamp to the post header
+            postHeader.appendChild(profileImg);
+            postHeader.appendChild(posterName);
+            postHeader.appendChild(timestamp);
 
-                // Append header and content to the post element
-                postElement.appendChild(postHeader);
-                postElement.appendChild(postContent);
+            // Add post content
+            const postContent = document.createElement("p");
+            postContent.textContent = post.content; // Display the post content
 
-                feed.appendChild(postElement); // Add the post to the feed
-            });
-        } else {
-            console.error("Expected posts to be an array, but received:", posts);
-        }
+            // Append header and content to the post element
+            postElement.appendChild(postHeader);
+            postElement.appendChild(postContent);
+
+            feed.appendChild(postElement); // Add the post to the feed
+        });
     } catch (error) {
         console.error("Error fetching posts:", error);
     }
@@ -142,4 +144,5 @@ window.onload = async function () {
     loadPosts();  // Fetch and display posts when the page loads
     await fetchUserSession(); // Fetch session on page load
 };
+
 
