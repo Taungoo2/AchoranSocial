@@ -1,3 +1,10 @@
+// Function to get a cookie by name
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 // Handling the Add Post button and popup
 document.getElementById('addPostBtn').addEventListener('click', function() {
     document.getElementById('popupLayer').style.display = 'flex'; // Show the popup
@@ -15,10 +22,10 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
     
     const postContent = document.getElementById('postContent').value.trim();
-    const userId = sessionStorage.getItem("user_id"); // Get user ID from sessionStorage
+    const sessionCookie = getCookie("session_id"); // Get session cookie
 
-    // Check if the user is logged in
-    if (!userId) {
+    // Check if the user is logged in by verifying if session cookie exists
+    if (!sessionCookie) {
         alert("You must be logged in to post.");
         return;
     }
@@ -27,7 +34,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         const newPost = {
             content: postContent,
             timestamp: new Date().toISOString(), // Add timestamp
-            user_id: userId // Attach the user ID
+            user_id: sessionCookie // Use session cookie as user ID (or you can decode it if it's a JWT)
         };
 
         fetch('/.netlify/functions/add-post', {
