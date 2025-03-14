@@ -5,6 +5,17 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+// Function to check if the user is logged in
+function getUserId() {
+    let sessionCookie = getCookie("session_id");  // Try to get the session cookie
+    let userId = sessionStorage.getItem("user_id"); // Fallback to sessionStorage
+
+    console.log("Session Cookie:", sessionCookie);
+    console.log("Session Storage User ID:", userId);
+
+    return sessionCookie || userId; // Use either the cookie or sessionStorage
+}
+
 // Handling the Add Post button and popup
 document.getElementById('addPostBtn').addEventListener('click', function() {
     document.getElementById('popupLayer').style.display = 'flex'; // Show the popup
@@ -22,10 +33,9 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
     
     const postContent = document.getElementById('postContent').value.trim();
-    const sessionCookie = getCookie("session_id"); // Get session cookie
+    const userId = getUserId();  // Get user ID from cookies or sessionStorage
 
-    // Check if the user is logged in by verifying if session cookie exists
-    if (!sessionCookie) {
+    if (!userId) {
         alert("You must be logged in to post.");
         return;
     }
@@ -33,23 +43,23 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
     if (postContent !== '') {
         const newPost = {
             content: postContent,
-            timestamp: new Date().toISOString(), // Add timestamp
-            user_id: sessionCookie // Use session cookie as user ID (or you can decode it if it's a JWT)
+            timestamp: new Date().toISOString(),
+            user_id: userId
         };
+
+        console.log("New Post Data:", newPost);  // Debugging: Log the post before sending
 
         fetch('/.netlify/functions/add-post', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newPost), // Send the new post data
+            body: JSON.stringify(newPost),
         })
         .then(response => response.json())
         .then(data => {
             console.log('Post added:', data);
-
-            // Reload posts after adding a new one
-            loadPosts();  
+            loadPosts();  // Reload posts
 
             document.getElementById('postForm').reset();
             document.getElementById('popupLayer').style.display = 'none';
@@ -62,55 +72,53 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
 
 // Fetch posts from Supabase and display them in order by id
 async function loadPosts() {
-  try {
-    const response = await fetch('/.netlify/functions/get-posts');
-    const posts = await response.json();
-    
-    const feed = document.getElementById('feed');
-    feed.innerHTML = '';  // Clear current posts before adding the new ones
-    
-    // Loop through all posts and display them
-    posts.forEach(post => {
-      const postElement = document.createElement('div');
-      postElement.classList.add('post');
+    try {
+        const response = await fetch('/.netlify/functions/get-posts');
+        const posts = await response.json();
+        
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';  // Clear current posts before adding new ones
 
-      // Add profile picture, name, and timestamp
-      const postHeader = document.createElement('div');
-      postHeader.classList.add('post-header');
-      
-      const profileImg = document.createElement('img');
-      profileImg.classList.add('profile-img');
-      profileImg.src = post.profilePictureUrl;  // Assuming profile picture URL is available
+        posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
 
-      const posterName = document.createElement('span');
-      posterName.classList.add('poster-name');
-      posterName.textContent = post.posterName;  // Assuming poster name is available
+            // Post Header (Profile Pic, Name, Timestamp)
+            const postHeader = document.createElement('div');
+            postHeader.classList.add('post-header');
 
-      const timestamp = document.createElement('span');
-      timestamp.classList.add('timestamp');
-      timestamp.textContent = new Date(post.timestamp).toLocaleString();  // Format timestamp
+            const profileImg = document.createElement('img');
+            profileImg.classList.add('profile-img');
+            profileImg.src = post.profilePictureUrl || 'default-profile.png'; // Fallback image
 
-      // Append profile, name, and timestamp to the post header
-      postHeader.appendChild(profileImg);
-      postHeader.appendChild(posterName);
-      postHeader.appendChild(timestamp);
+            const posterName = document.createElement('span');
+            posterName.classList.add('poster-name');
+            posterName.textContent = post.posterName || "Unknown User";
 
-      // Add post content
-      const postContent = document.createElement('p');
-      postContent.textContent = post.content;  // Display the post content
+            const timestamp = document.createElement('span');
+            timestamp.classList.add('timestamp');
+            timestamp.textContent = new Date(post.timestamp).toLocaleString();
 
-      // Append header and content to the post element
-      postElement.appendChild(postHeader);
-      postElement.appendChild(postContent);
+            postHeader.appendChild(profileImg);
+            postHeader.appendChild(posterName);
+            postHeader.appendChild(timestamp);
 
-      feed.appendChild(postElement);  // Add the post to the feed
-    });
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-  }
+            // Post Content
+            const postContent = document.createElement('p');
+            postContent.textContent = post.content;
+
+            postElement.appendChild(postHeader);
+            postElement.appendChild(postContent);
+            feed.appendChild(postElement);
+        });
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+    }
 }
 
-// Call loadPosts when the page is loaded to fetch initial posts
+// Run when the page loads
 window.onload = function() {
-  loadPosts();  // Fetch and display posts when the page loads
+    loadPosts();
+    console.log("All Cookies:", document.cookie);  // Debugging: Log all cookies
 };
+
