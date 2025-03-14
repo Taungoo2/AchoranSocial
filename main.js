@@ -1,9 +1,8 @@
-// Function to fetch user session from the backend (modified)
+// Function to fetch user session from the backend
 async function fetchUserSession() {
     try {
-        // Fetch the session from the serverless function
         const response = await fetch("/.netlify/functions/check-session", {
-            credentials: "include", // Ensures cookies are sent
+            credentials: "include",
         });
 
         if (!response.ok) {
@@ -11,17 +10,17 @@ async function fetchUserSession() {
         }
 
         const data = await response.json();
-        console.log("Session Data:", data); // Debugging
 
         if (data.loggedIn && data.userId) {
-            return data.userId; // Return the user ID if logged in
+            console.log("User is logged in:", data.userId);
+            return data.userId;
         } else {
-            console.log("No active session found.");
-            return null; // Return null if no session is found
+            console.log("User not logged in");
+            return null;
         }
     } catch (error) {
-        console.error("Error fetching session:", error);
-        return null; // Return null if error occurs
+        console.error("Session check failed:", error);
+        return null;
     }
 }
 
@@ -98,9 +97,10 @@ async function loadPosts() {
             const postHeader = document.createElement("div");
             postHeader.classList.add("post-header");
 
+            // Use the user_id to construct the profile picture path
             const profileImg = document.createElement("img");
             profileImg.classList.add("profile-img");
-            profileImg.src = post.profilePictureUrl || "/default-avatar.png"; // Fallback avatar
+            profileImg.src = `/Assets/${post.user_id}.png`; // Profile picture named after user_id in /Assets folder
 
             const posterName = document.createElement("span");
             posterName.classList.add("poster-name");
@@ -135,5 +135,4 @@ window.onload = async function () {
     loadPosts();  // Fetch and display posts when the page loads
     await fetchUserSession(); // Fetch session on page load
 };
-
 
