@@ -47,6 +47,26 @@
   </section>
 
   <script src="main.js"></script>
+  <script><script>
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const response = await fetch("/.netlify/functions/check-session", {
+            credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (data.loggedIn) {
+            console.log("User is logged in:", data.userId);
+            // You can also update UI to show "Welcome, User!" instead of "Login"
+        } else {
+            console.log("User not logged in");
+        }
+    } catch (error) {
+        console.error("Session check failed:", error);
+    }
+});
+</script></script>
 </body>
 </html>
 
