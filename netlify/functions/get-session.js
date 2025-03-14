@@ -1,13 +1,14 @@
 const { createClient } = require("@supabase/supabase-js");
 
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY,
+    { auth: { persistSession: false } } // Ensure session handling
+);
+
 exports.handler = async (event, context) => {
     try {
-        const supabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_ANON_KEY
-        );
-
-        const { data, error } = await supabase.auth.getSession(); // ✅ Correct function
+        const { data, error } = await supabase.auth.getSession(); // ✅ Correct function for v2
 
         if (error) {
             throw new Error(error.message);
