@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
 
         if (data.success) {
-            window.location.href = "feed.html"; // Redirect after login
+            window.location.href = "index.html"; // Redirect after login
         } else {
             alert("Invalid username or password.");
         }
