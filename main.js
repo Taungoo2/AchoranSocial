@@ -86,63 +86,49 @@ async function loadPosts() {
         let posts = await response.json();
 
         posts.reverse();
-
+        
         const feed = document.getElementById("feed");
         feed.innerHTML = ""; // Clear current posts before adding new ones
 
-        // Loop through all posts and display them
         posts.forEach(post => {
             const postElement = document.createElement("div");
             postElement.classList.add("post");
 
-             // Create a clickable link
+            // Create a clickable link
             const postLink = document.createElement("a");
             postLink.href = `post.html?id=${post.id}`;
             postLink.classList.add("post-link"); // Add styling if needed
 
-            // Add profile picture, name, and timestamp
+            // Post header
             const postHeader = document.createElement("div");
             postHeader.classList.add("post-header");
 
-            // Validate user_id, if it's null or undefined, assign a fallback image
             const profileImg = document.createElement("img");
             profileImg.classList.add("profile-img");
-
-            const userId = post.user_id; // Retrieve user_id from post
-            console.log("Post user_id:", userId); // Debugging log to verify the user_id
-
-            // Create a variable string for the profile image path
-            let profileImageUrl = `/Assets/${userId}.png`; // Default path based on user_id
-
-            // Check if the user_id exists and is valid, else fallback to default image
-            if (userId && userId !== null && userId !== undefined) {
-                profileImg.src = profileImageUrl; // Use the generated string for the image URL
-            } else {
-                profileImg.src = `/..Assets/default.png`; // Fallback to a default image if user_id is missing
-            }
+            profileImg.src = `/Assets/${post.user_id}.png`;
 
             const posterName = document.createElement("span");
             posterName.classList.add("poster-name");
-            posterName.textContent = post.posterName || "Anonymous"; // Default name if not provided
+            posterName.textContent = post.posterName || "Anonymous";
 
             const timestamp = document.createElement("span");
             timestamp.classList.add("timestamp");
-            timestamp.textContent = new Date(post.timestamp).toLocaleString(); // Format timestamp
+            timestamp.textContent = new Date(post.timestamp).toLocaleString();
 
-            // Append profile, name, and timestamp to the post header
             postHeader.appendChild(profileImg);
             postHeader.appendChild(posterName);
             postHeader.appendChild(timestamp);
 
-            // Add post content
+            // Post content
             const postContent = document.createElement("p");
-            postContent.textContent = post.content; // Display the post content
+            postContent.textContent = post.content;
 
-            // Append header and content to the post element
-            postElement.appendChild(postHeader);
-            postElement.appendChild(postContent);
+            // Append header and content to post link
+            postLink.appendChild(postHeader);
+            postLink.appendChild(postContent);
 
-            feed.appendChild(postElement); // Add the post to the feed
+            postElement.appendChild(postLink);
+            feed.appendChild(postElement);
         });
     } catch (error) {
         console.error("Error fetching posts:", error);
