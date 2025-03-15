@@ -14,24 +14,42 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Fetch the single post, including username from the users table
-    const { data, error } = await supabase
+    // Fetch the single post
+    const { data: post, error: postError } = await supabase
       .from('posts')
-      .select('id, content, user_id, timestamp, users(username)')
+      .select('id, content, user_id, timestamp')
       .eq('id', postId)
       .single(); // Ensure only one post is retrieved
 
-    if (error) {
-      console.error('Error fetching post:', error.message);
+    if (postError) {
+      console.error('Error fetching post:', postError.message);
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: 'Error fetching post', error: error.message }),
+        body: JSON.stringify({ message: 'Error fetching post', error: postError.message }),
       };
     }
 
+    // Fetch the username from the 'users' table based on user_id
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('username')
+      .eq('id', post.user_id)
+      .single(); // Fetch the username of the user who made the post
+
+    if (userError) {
+      console.error('Error fetching user:', userError.message);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: 'Error fetching user', error: userError.message }),
+      };
+    }
+
+    // Add the username to the post data
+    post.username = user ? user.username : "Anonymous";
+
     return {
       statusCode: 200,
-      body: JSON.stringify(data), // Return post data
+      body: JSON.stringify(post), // Return post with username added
     };
   } catch (error) {
     console.error('Server error:', error.message);
@@ -41,4 +59,5 @@ exports.handler = async function(event, context) {
     };
   }
 };
+
 
