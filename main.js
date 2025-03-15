@@ -83,7 +83,9 @@ document.getElementById("postForm").addEventListener("submit", async function (e
 async function loadPosts() {
     try {
         const response = await fetch("/.netlify/functions/get-posts");
-        const posts = await response.json();
+        let posts = await response.json();
+
+        posts.reverse();
 
         const feed = document.getElementById("feed");
         feed.innerHTML = ""; // Clear current posts before adding new ones
