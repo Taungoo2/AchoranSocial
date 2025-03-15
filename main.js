@@ -95,6 +95,11 @@ async function loadPosts() {
             const postElement = document.createElement("div");
             postElement.classList.add("post");
 
+             // Create a clickable link
+            const postLink = document.createElement("a");
+            postLink.href = `post.html?id=${post.id}`;
+            postLink.classList.add("post-link"); // Add styling if needed
+
             // Add profile picture, name, and timestamp
             const postHeader = document.createElement("div");
             postHeader.classList.add("post-header");
