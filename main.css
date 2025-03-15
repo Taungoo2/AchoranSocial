@@ -56,7 +56,7 @@ h1 {
     margin: auto;
     margin-top: 5px;
     flex: 1;
-    padding-top: 60px; /* Add padding to the top to prevent content from hiding behind the header */
+    padding-top: 20px; /* Add padding to the top to prevent content from hiding behind the header */
     overflow-y: auto;  /* Allow scrolling */
 }
 
