@@ -72,3 +72,11 @@ body {
     line-height: 1.6;
 }
 
+a {
+    color: white; /* Ensure links are white */
+    text-decoration: none; /* Remove underline */
+}
+
+a:hover {
+    color: lightgray; /* Optional: Change color on hover */
+}
