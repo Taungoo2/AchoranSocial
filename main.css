@@ -121,6 +121,7 @@ h1 {
     justify-content: center;
     box-sizing: border-box;
     z-index: 1000;
+    position: sticky;
 }
 
 footer {
