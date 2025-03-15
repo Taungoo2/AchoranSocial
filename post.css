@@ -1,3 +1,4 @@
+/* Background styling */
 body {
     background-color: #1e1e1e;
     color: white;
@@ -7,42 +8,67 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    flex-direction: column;
 }
 
+/* Back to Feed Link */
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Post container */
 .post-container {
     width: 60%;
     max-width: 800px;
     background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 25px;
+    border-radius: 12px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    margin-top: 60px; /* Prevents overlap with Back to Feed link */
 }
 
+/* Post header */
 .post-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 15px;
 }
 
+/* Profile image */
 .profile-img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
+/* Poster name styling */
 .poster-name {
     font-weight: bold;
     font-size: 1.2em;
+    flex-grow: 1; /* Ensures spacing between name and timestamp */
 }
 
+/* Timestamp styling */
 .timestamp {
-    margin-left: auto;
     font-size: 0.9em;
     color: #aaa;
+    margin-left: 20px; /* Adds space between name and timestamp */
 }
 
+/* Post content */
 .post-content {
     font-size: 1.4em;
     line-height: 1.6;
 }
+
