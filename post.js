@@ -34,7 +34,7 @@ async function loadSinglePost() {
         // Poster name (use fetched username or fallback to Anonymous)
         const posterName = document.createElement("span");
         posterName.classList.add("poster-name");
-        posterName.textContent = post.users ? post.users.username : "Anonymous";
+        posterName.textContent = post.username || "Anonymous"; // Using post.username
 
         // Timestamp formatting
         const timestamp = document.createElement("span");
@@ -63,4 +63,3 @@ async function loadSinglePost() {
 
 // Load post when page is ready
 window.onload = loadSinglePost;
-
