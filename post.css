@@ -1,0 +1,48 @@
+body {
+    background-color: #1e1e1e;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.post-container {
+    width: 60%;
+    max-width: 800px;
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.poster-name {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.timestamp {
+    margin-left: auto;
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.post-content {
+    font-size: 1.4em;
+    line-height: 1.6;
+}
