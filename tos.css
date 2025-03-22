@@ -31,22 +31,6 @@ nav a:hover {
   margin-top: 20px;
 }
 
-/* Terms of Service Section */
-.tos-container {
-  width: 80%;
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #2a2a2a;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
-.tos-content {
-  font-size: 1.1em;
-  line-height: 1.6;
-}
-
 /* Footer Section */
 footer {
   text-align: center;
@@ -55,3 +39,4 @@ footer {
   color: white;
   margin-top: 40px;
 }
+
