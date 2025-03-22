@@ -50,9 +50,12 @@ exports.handler = async function(event, context) {
     <meta name="twitter:image" content="https://yourdomain.netlify.app/Assets/${post.user_id}.png" />
   `;
 
-  // Return the HTML with the dynamic meta tags
+  // Redirect the user to the actual post page
   return {
-    statusCode: 200,
+    statusCode: 302,
+    headers: {
+      Location: `https://effortless-frangipane-fdb9af.netlify.app/post.html?id=${id}`,
+    },
     body: `
       <!DOCTYPE html>
       <html lang="en">
@@ -63,9 +66,10 @@ exports.handler = async function(event, context) {
           ${metaTags}
         </head>
         <body>
-          <p>Post Preview for ID: ${id}</p>
+          <p>Redirecting to the post...</p>
         </body>
       </html>
     `
   };
 };
+
