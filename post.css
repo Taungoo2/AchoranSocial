@@ -34,7 +34,7 @@ body {
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    margin-top: 80px; /* Prevent overlap with Back to Feed link */
+    margin-top: 20px; /* Prevent overlap with Back to Feed link */
 }
 
 /* Post header */
