@@ -1,60 +1,71 @@
 const { createClient } = require('@supabase/supabase-js');
 
+// Initialize Supabase client using Netlify environment variables
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
-exports.handler = async (event) => {
-  const postId = event.queryStringParameters.id;
+exports.handler = async function(event, context) {
+  const { id } = event.queryStringParameters;  // Get the post ID from the query string
 
-  if (!postId) {
-    return {
-      statusCode: 400,
-      body: 'Post ID missing.',
-    };
-  }
-
-  const { data, error } = await supabase
+  // Fetch post details using the post ID
+  const { data: post, error: postError } = await supabase
     .from('posts')
-    .select('content, user_id, timestamp')
-    .eq('id', postId)
+    .select('id, content, user_id, timestamp')
+    .eq('id', id)
     .single();
 
-  if (error || !data) {
+  if (postError || !post) {
     return {
       statusCode: 404,
-      body: 'Post not found.',
+      body: JSON.stringify({ message: 'Post not found' })
     };
   }
 
-  // Optional: truncate content for description
-  const description = data.content.length > 150 ? data.content.substring(0, 150) + '...' : data.content;
+  // Fetch the username of the user who made the post
+  const { data: user, error: userError } = await supabase
+    .from('users')
+    .select('username')
+    .eq('id', post.user_id)
+    .single();
 
-  const html = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta property="og:title" content="Post by User ${data.user_id}" />
-      <meta property="og:description" content="${description}" />
-      <meta property="og:image" content="https://yourdomain.netlify.app/Assets/${data.user_id}.png" />
-      <meta property="og:url" content="https://effortless-frangipane-fdb9af.netlify.app/post.html?id=${postId}" />
+  if (userError || !user) {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({ message: 'User not found' })
+    };
+  }
 
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Post by User ${data.user_id}" />
-      <meta name="twitter:description" content="${description}" />
-      <meta name="twitter:image" content="https://yourdomain.netlify.app/Assets/${data.user_id}.png" />
+  const username = user.username;
+  const postContent = post.content;
 
-      <meta http-equiv="refresh" content="0; URL=https://effortless-frangipane-fdb9af.netlify.app/post.html?id=${postId}" />
-      <title>Redirecting to Post...</title>
-    </head>
-    <body>
-      <p>Redirecting to post...</p>
-    </body>
-    </html>
+  // Construct Open Graph and Twitter meta tags with the fetched data
+  const metaTags = `
+    <meta property="og:title" content="Post by ${username}" />
+    <meta property="og:description" content="${postContent}" />
+    <meta property="og:image" content="https://yourdomain.netlify.app/Assets/${post.user_id}.png" />
+    <meta property="og:url" content="https://effortless-frangipane-fdb9af.netlify.app/post.html?id=${id}" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Post by ${username}" />
+    <meta name="twitter:description" content="${postContent}" />
+    <meta name="twitter:image" content="https://yourdomain.netlify.app/Assets/${post.user_id}.png" />
   `;
 
+  // Return the HTML with the dynamic meta tags
   return {
     statusCode: 200,
-    headers: { 'Content-Type': 'text/html' },
-    body: html,
+    body: `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Post Preview</title>
+          ${metaTags}
+        </head>
+        <body>
+          <p>Post Preview for ID: ${id}</p>
+        </body>
+      </html>
+    `
   };
 };
