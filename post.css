@@ -25,22 +25,21 @@ body {
     text-decoration: underline;
 }
 
-/* Post container */
+/* Post container (gray square box) */
 .post-container {
     width: 60%;
     max-width: 800px;
-    background-color: #2a2a2a;
+    background-color: #2a2a2a;  /* Gray box */
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    margin-top: 60px; /* Prevents overlap with Back to Feed link */
+    margin-top: 80px; /* Prevent overlap with Back to Feed link */
 }
 
 /* Post header */
 .post-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 15px;
 }
 
@@ -56,27 +55,30 @@ body {
 .poster-name {
     font-weight: bold;
     font-size: 1.2em;
-    flex-grow: 1; /* Ensures spacing between name and timestamp */
+    display: block;
 }
 
 /* Timestamp styling */
 .timestamp {
     font-size: 0.9em;
     color: #aaa;
-    margin-left: 20px; /* Adds space between name and timestamp */
+    display: block;
+    margin-top: 4px; /* Space between name and timestamp */
 }
 
 /* Post content */
 .post-content {
     font-size: 1.4em;
     line-height: 1.6;
+    margin-top: 10px;
 }
 
+/* Link styling */
 a {
-    color: white; /* Ensure links are white */
-    text-decoration: none; /* Remove underline */
+    color: white;
+    text-decoration: none;
 }
 
 a:hover {
-    color: lightgray; /* Optional: Change color on hover */
+    color: lightgray;
 }
