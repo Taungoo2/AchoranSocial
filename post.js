@@ -19,9 +19,6 @@ async function loadSinglePost() {
         const postContainer = document.getElementById("post-container");
         postContainer.innerHTML = ""; // Clear previous content
 
-        const postElement = document.createElement("div");
-        postElement.classList.add("single-post");
-
         // Post header section
         const postHeader = document.createElement("div");
         postHeader.classList.add("post-header");
@@ -31,35 +28,39 @@ async function loadSinglePost() {
         profileImg.classList.add("profile-img");
         profileImg.src = `/Assets/${post.user_id}.png`;
 
-        // Poster name (use fetched username or fallback to Anonymous)
+        // Poster name
         const posterName = document.createElement("span");
         posterName.classList.add("poster-name");
-        posterName.textContent = post.username || "Anonymous"; // Using post.username
+        posterName.textContent = post.username || "Anonymous";
 
-        // Timestamp formatting
+        // Timestamp
         const timestamp = document.createElement("span");
         timestamp.classList.add("timestamp");
         timestamp.textContent = new Date(post.timestamp).toLocaleString();
 
-        // Append elements to post header
+        // Header layout
+        const nameAndTimeContainer = document.createElement("div");
+        nameAndTimeContainer.style.display = "flex";
+        nameAndTimeContainer.style.alignItems = "center";
+
+        nameAndTimeContainer.appendChild(posterName);
+        nameAndTimeContainer.appendChild(timestamp);
+
         postHeader.appendChild(profileImg);
-        postHeader.appendChild(posterName);
-        postHeader.appendChild(timestamp);
+        postHeader.appendChild(nameAndTimeContainer);
 
         // Post content
         const postContent = document.createElement("p");
         postContent.classList.add("post-content");
         postContent.textContent = post.content;
 
-        // Append header and content to post element
-        postElement.appendChild(postHeader);
-        postElement.appendChild(postContent);
-
-        postContainer.appendChild(postElement); // Add post to the container
+        // Append header and content directly to postContainer
+        postContainer.appendChild(postHeader);
+        postContainer.appendChild(postContent);
     } catch (error) {
         console.error("Error fetching post:", error);
     }
 }
 
-// Load post when page is ready
 window.onload = loadSinglePost;
+
