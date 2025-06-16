@@ -51,26 +51,44 @@
   <script src="main.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", async () => {
-      try {
-          const response = await fetch("/.netlify/functions/check-session", {
-              credentials: "include",
-          });
+  const feed = document.getElementById("feed");
 
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
+  try {
+    const response = await fetch("/.netlify/functions/get-posts");
+    const posts = await response.json();
 
-          const data = await response.json();
+    feed.innerHTML = ""; // Clear old content
 
-          if (data.loggedIn && data.userId) {
-              console.log("User is logged in:", data.userId);
-          } else {
-              console.log("User not logged in");
-          }
-      } catch (error) {
-          console.error("Session check failed:", error);
-      }
-  });
+    posts.forEach(post => {
+      const postContainer = document.createElement("div");
+      postContainer.className = "post";
+
+      const contentElement = document.createElement("div");
+      contentElement.className = "post-content";
+
+      // Render with Markdown + sanitize
+      contentElement.innerHTML = DOMPurify.sanitize(marked.parse(post.content));
+
+      const poster = document.createElement("div");
+      poster.className = "poster";
+      poster.textContent = `Posted by ${post.posterName}`;
+
+      const timestamp = document.createElement("div");
+      timestamp.className = "timestamp";
+      timestamp.textContent = new Date(post.timestamp).toLocaleString();
+
+      postContainer.appendChild(poster);
+      postContainer.appendChild(contentElement);
+      postContainer.appendChild(timestamp);
+
+      feed.appendChild(postContainer);
+    });
+
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+    feed.innerHTML = "<p>Error loading feed.</p>";
+  }
+});
   </script>
 </body>
 </html>
