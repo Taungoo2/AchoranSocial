@@ -121,7 +121,7 @@ async function loadPosts() {
 
             // Post content
             const postContent = document.createElement("p");
-            postContent.textContent = post.content;
+            postContent.innerHTML = DOMPurify.sanitize(marked.parse(post.content));
 
             // Append header and content to post link
             postLink.appendChild(postHeader);
