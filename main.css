@@ -71,7 +71,10 @@ h1 {
 /* Profile Picture and Name */
 .post-header {
     display: flex;
-    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 8px;
+    padding-right: 10px;
+    justify-content: space-between;
     align-items: center;
 }
 
