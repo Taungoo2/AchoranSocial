@@ -71,7 +71,7 @@ h1 {
 /* Profile Picture and Name */
 .post-header {
     display: flex;
-    gap: 5px;
+    gap: 15px;
     align-items: center;
 }
 
