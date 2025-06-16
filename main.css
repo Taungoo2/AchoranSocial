@@ -71,10 +71,7 @@ h1 {
 /* Profile Picture and Name */
 .post-header {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 8px;
-    padding-right: 10px;
-    justify-content: space-between;
+    gap: 15px;
     align-items: center;
 }
 
@@ -311,7 +308,11 @@ a:hover {
     background-color: #666;
 }
 
-
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 
 
