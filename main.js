@@ -127,31 +127,34 @@ async function loadPosts() {
             postLink.appendChild(postHeader);
             postLink.appendChild(postContent);
             
-            // Share button
-            const shareButton = document.createElement("button");
-            shareButton.classList.add("share-button");
-            shareButton.textContent = "Share";
-            shareButton.addEventListener("click", () => {
+            const shareBtnWrapper = document.createElement("div");
+            shareBtnWrapper.classList.add("share-btn-wrapper");
+
+            const shareImg = document.createElement("img");
+            shareImg.src = "/Assets/share.png";
+            shareImg.alt = "Share";
+            shareImg.classList.add("share-btn");
+
+            shareImg.addEventListener("click", (e) => {
+                e.stopPropagation(); // Prevent navigating to post.html
+                e.preventDefault();
                 const shareURL = `https://effortless-frangipane-fdb9af.netlify.app/.netlify/functions/post-preview?id=${post.id}`;
                 navigator.clipboard.writeText(shareURL)
                     .then(() => {
-                        shareButton.textContent = "Copied!";
+                        shareImg.classList.add("copied");
                         setTimeout(() => {
-                            shareButton.textContent = "Share";
-                        }, 2000);
+                            shareImg.classList.remove("copied");
+                        }, 1500);
                     })
                     .catch(err => {
                         console.error("Clipboard copy failed:", err);
-                        shareButton.textContent = "Failed";
-                        setTimeout(() => {
-                            shareButton.textContent = "Share";
-                        }, 2000);
                     });
             });
-            
-            // Append elements to post element
+
+            shareBtnWrapper.appendChild(shareImg);
+
             postElement.appendChild(postLink);
-            postElement.appendChild(shareButton);
+            postElement.appendChild(shareBtnWrapper);
             feed.appendChild(postElement);
         });
     } catch (error) {
