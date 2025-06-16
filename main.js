@@ -110,11 +110,9 @@ async function loadPosts() {
             timestamp.classList.add("timestamp");
             timestamp.textContent = new Date(post.timestamp).toLocaleString();
 
-            const postHeaderLeft = document.createElement("div");
-            postHeaderLeft.classList.add("post-header-left");
-            postHeaderLeft.appendChild(profileImg);
-            postHeaderLeft.appendChild(posterName);
-            postHeaderLeft.appendChild(timestamp);
+            postHeader.appendChild(profileImg);
+            postHeader.appendChild(posterName);
+            postHeader.appendChild(timestamp);
 
             const shareImg = document.createElement("img");
             shareImg.src = "/Assets/share.png";
