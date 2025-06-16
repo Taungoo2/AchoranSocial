@@ -1,51 +1,40 @@
-const { createClient } = require('@supabase/supabase-js');
+document.addEventListener("DOMContentLoaded", async () => {
+  const feed = document.getElementById("feed");
 
-// Initialize Supabase client using Netlify environment variables
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-
-exports.handler = async function(event, context) {
   try {
-    // Fetch posts from Supabase, sorted by 'id' in descending order
-    const { data, error } = await supabase
-      .from('posts')  // Make sure this matches your Supabase table name
-      .select('id, content, timestamp, user_id')  // Select 'id', 'content', 'timestamp', and 'user_id'
-      .order('id', { ascending: false });  // Order by ID, newest first
+    const response = await fetch("/.netlify/functions/get-posts");
+    const posts = await response.json();
 
-    if (error) {
-      console.error('Error fetching posts:', error.message);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: 'Error fetching posts', error: error.message }),
-      };
-    }
+    feed.innerHTML = ""; // Clear old content
 
-    // Fetch usernames associated with each post using user_id
-    const postsWithUsernames = await Promise.all(data.map(async (post) => {
-      const { data: userData, error: userError } = await supabase
-        .from('users')  // Make sure 'users' table exists and contains the username
-        .select('username')  // Assuming 'username' column exists in 'users' table
-        .eq('id', post.user_id)
-        .single();
+    posts.forEach(post => {
+      const postContainer = document.createElement("div");
+      postContainer.className = "post";
 
-      if (userError) {
-        console.error('Error fetching username:', userError.message);
-        post.posterName = "Anonymous";  // Default to "Anonymous" if no username is found
-      } else {
-        post.posterName = userData.username;  // Assign the username to the post
-      }
+      const contentElement = document.createElement("div");
+      contentElement.className = "post-content";
 
-      return post;
-    }));
+      // Render with Markdown + sanitize
+      contentElement.innerHTML = DOMPurify.sanitize(marked.parse(post.content));
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(postsWithUsernames),  // Return posts with usernames
-    };
+      const poster = document.createElement("div");
+      poster.className = "poster";
+      poster.textContent = `Posted by ${post.posterName}`;
+
+      const timestamp = document.createElement("div");
+      timestamp.className = "timestamp";
+      timestamp.textContent = new Date(post.timestamp).toLocaleString();
+
+      postContainer.appendChild(poster);
+      postContainer.appendChild(contentElement);
+      postContainer.appendChild(timestamp);
+
+      feed.appendChild(postContainer);
+    });
+
   } catch (error) {
-    console.error('Server error:', error.message);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Server error', error: error.message }),
-    };
+    console.error("Failed to fetch posts:", error);
+    feed.innerHTML = "<p>Error loading feed.</p>";
   }
-};
+});
+
