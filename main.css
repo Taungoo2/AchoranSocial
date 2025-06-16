@@ -292,3 +292,18 @@ a:hover {
 .post-content em {
   font-style: italic;
 }
+
+.share-button {
+    margin-top: 8px;
+    padding: 5px 12px;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.share-button:hover {
+    background-color: #666;
+}
