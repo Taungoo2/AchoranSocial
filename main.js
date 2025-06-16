@@ -26,13 +26,13 @@ async function fetchUserSession() {
 
 // Handling the Add Post button and popup
 document.getElementById("addPostBtn").addEventListener("click", function () {
-    document.getElementById("popupLayer").style.display = "flex"; // Show the popup
+    document.getElementById("popupLayer").style.display = "flex";
 });
 
 // Handling the closing of the popup if clicked outside the popup content
 document.getElementById("popupLayer").addEventListener("click", function (event) {
     if (event.target === document.getElementById("popupLayer")) {
-        document.getElementById("popupLayer").style.display = "none"; // Hide the popup
+        document.getElementById("popupLayer").style.display = "none";
     }
 });
 
@@ -41,7 +41,7 @@ document.getElementById("postForm").addEventListener("submit", async function (e
     event.preventDefault();
 
     const postContent = document.getElementById("postContent").value.trim();
-    const userId = await fetchUserSession(); // Retrieve user ID from backend
+    const userId = await fetchUserSession();
 
     if (!userId) {
         alert("You must be logged in to post.");
@@ -55,21 +55,18 @@ document.getElementById("postForm").addEventListener("submit", async function (e
             user_id: userId,
         };
 
-        console.log("New Post Data:", newPost); // Debugging
+        console.log("New Post Data:", newPost);
 
         fetch("/.netlify/functions/add-post", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newPost),
-            credentials: "include", // Ensure cookies are included
+            credentials: "include",
         })
         .then((response) => response.json())
         .then((data) => {
             console.log("Post added:", data);
-
-            // Reload posts after adding a new one
-            loadPosts();  
-
+            loadPosts();
             document.getElementById("postForm").reset();
             document.getElementById("popupLayer").style.display = "none";
         })
@@ -86,20 +83,18 @@ async function loadPosts() {
         let posts = await response.json();
 
         posts.reverse();
-        
+
         const feed = document.getElementById("feed");
-        feed.innerHTML = ""; // Clear current posts before adding new ones
+        feed.innerHTML = "";
 
         posts.forEach(post => {
             const postElement = document.createElement("div");
             postElement.classList.add("post");
 
-            // Create a clickable link
             const postLink = document.createElement("a");
             postLink.href = `post.html?id=${post.id}`;
-            postLink.classList.add("post-link"); // Add styling if needed
+            postLink.classList.add("post-link");
 
-            // Post header
             const postHeader = document.createElement("div");
             postHeader.classList.add("post-header");
 
@@ -115,20 +110,11 @@ async function loadPosts() {
             timestamp.classList.add("timestamp");
             timestamp.textContent = new Date(post.timestamp).toLocaleString();
 
-            postHeader.appendChild(profileImg);
-            postHeader.appendChild(posterName);
-            postHeader.appendChild(timestamp);
-
-            // Post content
-            const postContent = document.createElement("p");
-            postContent.innerHTML = marked.parse(post.content);
-
-            // Append header and content to post link
-            postLink.appendChild(postHeader);
-            postLink.appendChild(postContent);
-            
-            const shareBtnWrapper = document.createElement("div");
-            shareBtnWrapper.classList.add("share-btn-wrapper");
+            const postHeaderLeft = document.createElement("div");
+            postHeaderLeft.classList.add("post-header-left");
+            postHeaderLeft.appendChild(profileImg);
+            postHeaderLeft.appendChild(posterName);
+            postHeaderLeft.appendChild(timestamp);
 
             const shareImg = document.createElement("img");
             shareImg.src = "/Assets/share.png";
@@ -136,7 +122,7 @@ async function loadPosts() {
             shareImg.classList.add("share-btn");
 
             shareImg.addEventListener("click", (e) => {
-                e.stopPropagation(); // Prevent navigating to post.html
+                e.stopPropagation();
                 e.preventDefault();
                 const shareURL = `https://effortless-frangipane-fdb9af.netlify.app/.netlify/functions/post-preview?id=${post.id}`;
                 navigator.clipboard.writeText(shareURL)
@@ -151,10 +137,16 @@ async function loadPosts() {
                     });
             });
 
-            shareBtnWrapper.appendChild(shareImg);
+            postHeader.appendChild(postHeaderLeft);
+            postHeader.appendChild(shareImg);
+
+            const postContent = document.createElement("p");
+            postContent.innerHTML = marked.parse(post.content);
+
+            postLink.appendChild(postHeader);
+            postLink.appendChild(postContent);
 
             postElement.appendChild(postLink);
-            postElement.appendChild(shareBtnWrapper);
             feed.appendChild(postElement);
         });
     } catch (error) {
@@ -164,10 +156,9 @@ async function loadPosts() {
 
 // Call loadPosts when the page is loaded to fetch initial posts
 window.onload = async function () {
-    loadPosts();  // Fetch and display posts
-    await fetchUserSession(); // Fetch session on load
+    loadPosts();
+    await fetchUserSession();
 
-    // Character counter setup
     const postContentEl = document.getElementById("postContent");
     const charCountEl = document.getElementById("charCount");
 
