@@ -307,3 +307,27 @@ a:hover {
 .share-button:hover {
     background-color: #666;
 }
+
+.share-btn-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    padding-right: 10px;
+}
+
+.share-btn {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.share-btn:hover {
+    opacity: 1;
+}
+
+.share-btn.copied {
+    filter: brightness(1.5);
+}
