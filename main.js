@@ -126,8 +126,32 @@ async function loadPosts() {
             // Append header and content to post link
             postLink.appendChild(postHeader);
             postLink.appendChild(postContent);
-
+            
+            // Share button
+            const shareButton = document.createElement("button");
+            shareButton.classList.add("share-button");
+            shareButton.textContent = "Share";
+            shareButton.addEventListener("click", () => {
+                const shareURL = `https://effortless-frangipane-fdb9af.netlify.app/.netlify/functions/post-preview?id=${post.id}`;
+                navigator.clipboard.writeText(shareURL)
+                    .then(() => {
+                        shareButton.textContent = "Copied!";
+                        setTimeout(() => {
+                            shareButton.textContent = "Share";
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error("Clipboard copy failed:", err);
+                        shareButton.textContent = "Failed";
+                        setTimeout(() => {
+                            shareButton.textContent = "Share";
+                        }, 2000);
+                    });
+            });
+            
+            // Append elements to post element
             postElement.appendChild(postLink);
+            postElement.appendChild(shareButton);
             feed.appendChild(postElement);
         });
     } catch (error) {
