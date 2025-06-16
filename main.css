@@ -314,15 +314,10 @@ a:hover {
     align-items: center;
 }
 
-.post-header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
 .share-btn {
     width: 18px;
-    height: 18px;
+    height: 0px;
     opacity: 0.6;
     cursor: pointer;
     transition: opacity 0.2s ease;
