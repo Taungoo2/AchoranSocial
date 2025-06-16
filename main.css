@@ -71,8 +71,9 @@ h1 {
 /* Profile Picture and Name */
 .post-header {
     display: flex;
-    gap: 15px;
+    gap: 5px;
     align-items: center;
+    justify-content: space-between;
 }
 
 .profile-img {
@@ -308,11 +309,6 @@ a:hover {
     background-color: #666;
 }
 
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 
 
