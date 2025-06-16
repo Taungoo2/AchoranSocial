@@ -137,8 +137,16 @@ async function loadPosts() {
 
 // Call loadPosts when the page is loaded to fetch initial posts
 window.onload = async function () {
-    loadPosts();  // Fetch and display posts when the page loads
-    await fetchUserSession(); // Fetch session on page load
+    loadPosts();  // Fetch and display posts
+    await fetchUserSession(); // Fetch session on load
+
+    // Character counter setup
+    const postContentEl = document.getElementById("postContent");
+    const charCountEl = document.getElementById("charCount");
+
+    postContentEl.addEventListener("input", () => {
+        charCountEl.textContent = `${postContentEl.value.length} / 500`;
+    });
 };
 
 
