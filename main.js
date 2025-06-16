@@ -135,7 +135,6 @@ async function loadPosts() {
                     });
             });
 
-            postHeader.appendChild(postHeader);
             postHeader.appendChild(shareImg);
 
             const postContent = document.createElement("p");
