@@ -52,7 +52,7 @@ async function loadSinglePost() {
         // Post content
         const postContent = document.createElement("p");
         postContent.classList.add("post-content");
-        postContent.textContent = post.content;
+        postContent.innerHTML = marked.parse(post.content);
 
         // Append header and content directly to postContainer
         postContainer.appendChild(postHeader);
