@@ -122,7 +122,7 @@ async function loadPosts() {
             shareImg.addEventListener("click", (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                const shareURL = `https://effortless-frangipane-fdb9af.netlify.app/.netlify/functions/post-preview?id=${post.id}`;
+                const shareURL = `https://achoransocial.site/.netlify/functions/post-preview?id=${post.id}`;
                 navigator.clipboard.writeText(shareURL)
                     .then(() => {
                         shareImg.classList.add("copied");
