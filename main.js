@@ -135,6 +135,8 @@ async function loadPosts() {
                     });
             });
 
+            postHeader.appendChild(shareImg);
+
             const postContent = document.createElement("p");
             postContent.innerHTML = marked.parse(post.content);
 
