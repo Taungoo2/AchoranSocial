@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const data = await res.json();
+    console.log(data);
     if (data.success && typeof data.balance === "number") {
       document.getElementById("account-balance").textContent = `M${data.balance}`;
     } else {
