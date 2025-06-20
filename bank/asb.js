@@ -104,3 +104,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+const withdrawBtn = document.getElementById("withdraw-btn");
+
+withdrawBtn.addEventListener("click", () => {
+  popup.classList.remove("hidden");
+  document.getElementById("popup-title").textContent = "Withdraw";
+  currentPopup = "withdraw";
+
+  // Replace popup body for withdraw
+  document.getElementById("popup-body").innerHTML = `
+    <input type="number" id="withdraw-amount" placeholder="Amount to withdraw" />
+    <button id="popup-submit">Submit</button>
+    <p id="popup-message"></p>
+  `;
+
+  // Rebind submit listener
+  document.getElementById("popup-submit").addEventListener("click", async () => {
+    const amount = parseFloat(document.getElementById("withdraw-amount").value);
+    const messageBox = document.getElementById("popup-message");
+    const sessionId = getCookie("session_id");
+
+    if (!sessionId || !amount || amount <= 0) {
+      messageBox.textContent = "Enter a valid amount.";
+      return;
+    }
+
+    try {
+      const res = await fetch("/.netlify/functions/withdrawCheck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        messageBox.style.color = "green";
+        messageBox.textContent = `Withdrawal code: ${data.code}`;
+      } else {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Withdrawal failed.";
+      }
+    } catch (err) {
+      console.error("Withdraw error:", err);
+    }
+  });
+});
+
