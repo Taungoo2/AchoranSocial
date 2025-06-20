@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (data.success) {
       document.getElementById("account-username").textContent = data.username;
-      document.getElementById("account-number").textContent = data.account_number;
+      document.getElementById("account-number").textContent = `Account Number: ${data.account_number}`;
       document.getElementById("account-created").textContent = `Member since: ${formatDate(data.created_at)}`;
     } else {
       console.warn("Account info fetch failed:", data.message);
