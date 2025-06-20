@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("asb.js loaded");
   const sessionId = getCookie("session_id");
+  console.log("Session ID:", sessionId);
   if (!sessionId) return;
 
   try {
