@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #000;
+}
+
+.header {
+  background-color: #000;
+  position: relative;
+  height: 70px;
+}
+
+.logo-container {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+.logo {
+  height: 40px;
+  color: #eee;
+}
+
+.nav-links {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 30px;
+}
+
+.account-link {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  color: #eee;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  margin-top: 85px; /* 70 for header + 30 spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.account-balance {
+  font-size: 128px;
+  margin-bottom: 40px;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: 150px 150px;
+  gap: 20px;
+}
+
+.bank-button {
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  background-color: #eee;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.bank-button:hover {
+  background-color: #ccc;
+}
+
