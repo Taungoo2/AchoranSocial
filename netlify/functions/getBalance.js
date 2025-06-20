@@ -15,10 +15,12 @@ exports.handler = async (event) => {
     };
   }
 
+  const numericId = parseInt(session_id, 10); // ← parse as integer
+
   const { data, error } = await supabase
     .from("bank_users")
     .select("balance")
-    .eq("session_id", session_id)
+    .eq("id", numericId) // ← match against the integer `id` column
     .single();
 
   if (error || !data) {
