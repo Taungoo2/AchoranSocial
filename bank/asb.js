@@ -226,67 +226,79 @@ depositBtn.addEventListener("click", () => {
   });
 });
 
-document.getElementById("request-btn").addEventListener("click", () => {
-  openPopup("request-popup"); // assuming popup has id="request-popup"
-});
+const requestBtn = document.getElementById("request-btn");
 
-// Attach event listener for request submit
-document.getElementById("popup-submit").addEventListener("click", async () => {
-  const amount = parseFloat(document.getElementById("transfer-balance").value.trim());
-  const accountNumber = document.getElementById("transfer-number").value.trim();
-  const message = document.getElementById("popup-message");
-  const sessionId = getCookie("session_id");
+requestBtn.addEventListener("click", () => {
+  popup.classList.remove("hidden");
+  document.getElementById("popup-title").textContent = "Request";
+  currentPopup = "request";
+  messageBox.textContent = "";
 
-  // Clear previous message
-  message.textContent = "";
+  // Replace popup body for request
+  document.getElementById("popup-body").innerHTML = `
+    <input type="number" id="request-amount" placeholder="Amount" />
+    <input type="text" id="request-account" placeholder="Account Number" />
+    <button id="popup-submit">Submit</button>
+    <p id="popup-message"></p>
+  `;
 
-  if (!amount || amount <= 0 || !accountNumber) {
-    message.textContent = "Please enter a valid amount and account number.";
-    message.style.color = "red";
-    return;
-  }
+  // Rebind submit listener for request
+  document.getElementById("popup-submit").addEventListener("click", async () => {
+    const amount = parseFloat(document.getElementById("request-amount").value.trim());
+    const accountNumber = document.getElementById("request-account").value.trim();
+    const message = document.getElementById("popup-message");
+    const sessionId = getCookie("session_id");
 
-  try {
-    // Step 1: Check if recipient accepts requests
-    const check = await fetch("/.netlify/functions/checkIfReceivesRequests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ account_number: accountNumber })
-    }).then(res => res.json());
+    message.textContent = "";
 
-    if (!check.success) {
-      message.textContent = check.message || "Recipient does not accept requests.";
+    if (!amount || amount <= 0 || !accountNumber) {
+      message.textContent = "Please enter a valid amount and account number.";
       message.style.color = "red";
       return;
     }
 
-    // Step 2: Submit request to database
-    const submit = await fetch("/.netlify/functions/submitRequest", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        requester_id: sessionId,
-        account_number: accountNumber,
-        amount: amount
-      })
-    }).then(res => res.json());
+    try {
+      // Step 1: Check if recipient accepts requests
+      const check = await fetch("/.netlify/functions/checkIfReceivesRequests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ account_number: accountNumber })
+      }).then(res => res.json());
 
-    if (!submit.success) {
-      message.textContent = submit.message || "Failed to create request.";
+      if (!check.success) {
+        message.textContent = check.message || "Recipient does not accept requests.";
+        message.style.color = "red";
+        return;
+      }
+
+      // Step 2: Submit request to database
+      const submit = await fetch("/.netlify/functions/submitRequest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          requester_id: sessionId,
+          account_number: accountNumber,
+          amount: amount
+        })
+      }).then(res => res.json());
+
+      if (!submit.success) {
+        message.textContent = submit.message || "Failed to create request.";
+        message.style.color = "red";
+        return;
+      }
+
+      message.textContent = "Request sent successfully.";
+      message.style.color = "green";
+
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+
+    } catch (err) {
+      console.error("Request error:", err);
+      message.textContent = "An unexpected error occurred.";
       message.style.color = "red";
-      return;
     }
-
-    message.textContent = "Request sent successfully.";
-    message.style.color = "green";
-
-    setTimeout(() => {
-      location.reload();
-    }, 1000);
-
-  } catch (err) {
-    console.error("Request error:", err);
-    message.textContent = "An unexpected error occurred.";
-    message.style.color = "red";
-  }
+  });
 });
