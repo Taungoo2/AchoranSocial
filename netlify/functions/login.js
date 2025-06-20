@@ -32,7 +32,7 @@ exports.handler = async (event) => {
 
     // Create session cookie
     const sessionCookie = cookie.serialize("session_id", user.id, {
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
         sameSite: "Strict",
         path: "/",
