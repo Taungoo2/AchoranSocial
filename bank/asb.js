@@ -152,3 +152,77 @@ withdrawBtn.addEventListener("click", () => {
   });
 });
 
+const depositBtn = document.getElementById("deposit-btn");
+
+depositBtn.addEventListener("click", () => {
+  popup.classList.remove("hidden");
+  document.getElementById("popup-title").textContent = "Deposit";
+  currentPopup = "deposit";
+
+  document.getElementById("popup-body").innerHTML = `
+    <input type="text" id="check-code" maxlength="6" placeholder="Enter check code" />
+    <button id="popup-submit">Submit</button>
+    <p id="popup-message"></p>
+  `;
+
+  document.getElementById("popup-submit").addEventListener("click", async () => {
+    const code = document.getElementById("check-code").value.trim().toUpperCase();
+    const messageBox = document.getElementById("popup-message");
+    const sessionId = getCookie("session_id");
+
+    if (!code || code.length !== 6 || !sessionId) {
+      messageBox.textContent = "Invalid code.";
+      return;
+    }
+
+    // Step 1: verify check
+    const verify = await fetch("/.netlify/functions/verifyCheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    }).then(res => res.json());
+
+    if (!verify.success) {
+      messageBox.textContent = "Check not found.";
+      return;
+    }
+
+    // Step 2: check funds on sender account
+    const fundCheck = await fetch("/.netlify/functions/canFundCheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ account_id: verify.check.account_id, amount: verify.check.amount })
+    }).then(res => res.json());
+
+    if (!fundCheck.success) {
+      messageBox.textContent = "Check issuer has insufficient funds.";
+      return;
+    }
+
+    // Step 3: transfer
+    const transfer = await fetch("/.netlify/functions/preformTransfer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        session_id: verify.check.account_id, // sender
+        to_account: sessionId,               // recipient is current user
+        amount: verify.check.amount
+      })
+    }).then(res => res.json());
+
+    if (!transfer.success) {
+      messageBox.textContent = "Transfer failed.";
+      return;
+    }
+
+    // Step 4: delete check
+    await fetch("/.netlify/functions/removeCheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+
+    messageBox.style.color = "green";
+    messageBox.textContent = `Check deposited successfully: M${verify.check.amount}`;
+  });
+});
