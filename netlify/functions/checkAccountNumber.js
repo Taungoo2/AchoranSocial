@@ -24,7 +24,7 @@ exports.handler = async (event) => {
     };
   }
 
-  if (data.id === session_id) {
+if (String(data.id) === String(session_id)) { {
     return {
       statusCode: 400,
       body: JSON.stringify({ success: false, message: "Cannot transfer to yourself" }),
