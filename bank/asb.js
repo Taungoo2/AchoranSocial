@@ -232,17 +232,14 @@ requestBtn.addEventListener("click", () => {
   popup.classList.remove("hidden");
   document.getElementById("popup-title").textContent = "Request";
   currentPopup = "request";
-  messageBox.textContent = "";
 
-  // Replace popup body for request
   document.getElementById("popup-body").innerHTML = `
-    <input type="number" id="request-amount" placeholder="Amount" />
-    <input type="text" id="request-account" placeholder="Account Number" />
+    <input type="number" id="request-amount" placeholder="Amount to request" />
+    <input type="text" id="request-account" placeholder="Account number to request from" />
     <button id="popup-submit">Submit</button>
     <p id="popup-message"></p>
   `;
 
-  // Rebind submit listener for request
   document.getElementById("popup-submit").addEventListener("click", async () => {
     const amount = parseFloat(document.getElementById("request-amount").value.trim());
     const accountNumber = document.getElementById("request-account").value.trim();
@@ -258,7 +255,6 @@ requestBtn.addEventListener("click", () => {
     }
 
     try {
-      // Step 1: Check if recipient accepts requests
       const check = await fetch("/.netlify/functions/checkIfReceivesRequests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -271,7 +267,6 @@ requestBtn.addEventListener("click", () => {
         return;
       }
 
-      // Step 2: Submit request to database
       const submit = await fetch("/.netlify/functions/submitRequest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -302,3 +297,4 @@ requestBtn.addEventListener("click", () => {
     }
   });
 });
+
