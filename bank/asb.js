@@ -86,12 +86,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Step 3: Perform transfer
-      const doTransfer = await fetch("/.netlify/functions/performTransfer", {
+      // Step 3: transfer funds from check issuer to current user
+      const transfer = await fetch("/.netlify/functions/transferById", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId, amount, to_account: accountNum })
+        body: JSON.stringify({
+          from_id: verify.check.account_id,
+          to_id: sessionId,
+          amount: verify.check.amount
+        })
       }).then(res => res.json());
+
 
       if (doTransfer.success) {
         messageBox.style.color = "green";
