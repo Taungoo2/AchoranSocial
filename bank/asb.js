@@ -1,11 +1,3 @@
-// Normalize cookie path *before* anything else
-(function normalizeSessionCookiePath() {
-  const sessionId = getCookie("session_id");
-  if (sessionId) {
-    document.cookie = `session_id=${sessionId}; path=/bank`;
-  }
-})();
-
 // Define cookie reader
 function getCookie(name) {
   const value = `; ${document.cookie}`;
