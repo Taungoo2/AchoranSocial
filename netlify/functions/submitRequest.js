@@ -2,17 +2,21 @@ const { createClient } = require("@supabase/supabase-js");
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 exports.handler = async (event) => {
+  console.log("submitRequest invoked");
+
   try {
     const { requester_id, account_number, amount } = JSON.parse(event.body || "{}");
+    console.log("Received input:", { requester_id, account_number, amount });
 
     if (!requester_id || !account_number || !amount || amount <= 0) {
+      console.warn("Invalid input");
       return {
         statusCode: 400,
         body: JSON.stringify({ success: false, message: "Invalid input" }),
       };
     }
 
-    // Find the receiver's user ID from the bank_users table
+    // Step 1: Lookup account_number to get receiverId
     const { data: receiver, error: receiverError } = await supabase
       .from("bank_users")
       .select("id")
@@ -20,13 +24,16 @@ exports.handler = async (event) => {
       .single();
 
     if (receiverError || !receiver) {
+      console.warn("Receiver not found or error:", receiverError);
       return {
         statusCode: 404,
         body: JSON.stringify({ success: false, message: "Recipient not found" }),
       };
     }
 
-    // Add request to the requests table
+    console.log("Receiver ID:", receiver.id);
+
+    // Step 2: Insert request into `requests` table
     const { error: insertError } = await supabase
       .from("requests")
       .insert([
@@ -38,22 +45,25 @@ exports.handler = async (event) => {
       ]);
 
     if (insertError) {
+      console.error("Insert error:", insertError);
       return {
         statusCode: 500,
         body: JSON.stringify({ success: false, message: "Failed to submit request" }),
       };
     }
 
+    console.log("Request successfully inserted");
     return {
       statusCode: 200,
       body: JSON.stringify({ success: true }),
     };
   } catch (err) {
-    console.error("submitRequest error:", err);
+    console.error("Unhandled error in submitRequest:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({ success: false, message: "Server error" }),
     };
   }
 };
+
 
