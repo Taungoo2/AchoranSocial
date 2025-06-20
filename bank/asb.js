@@ -87,15 +87,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Step 3: transfer funds from check issuer to current user
-      const transfer = await fetch("/.netlify/functions/transferById", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from_id: verify.check.account_id,
-          to_id: sessionId,
-          amount: verify.check.amount
-        })
-      }).then(res => res.json());
+      const transferRes = await fetch("/.netlify/functions/transferById", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from_id: verify.check.account_id,
+        to_id: sessionId,
+        amount: verify.check.amount
+      })
+    });
+    
+    let transfer = {};
+    try {
+      transfer = await transferRes.json();
+    } catch (e) {
+      console.error("Transfer response error:", e);
+      messageBox.textContent = "Unexpected error during transfer.";
+      return;
+    }
 
 
       if (doTransfer.success) {
