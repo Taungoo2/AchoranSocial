@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("account.js loaded");
+  const closeBtn = document.getElementById("popup-close");
+  const popup = document.getElementById("popup");
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      popup.classList.add("hidden");
+    });
+  }
 
   const sessionId = getCookie("session_id");
   if (!sessionId) return;
