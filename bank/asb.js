@@ -76,15 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Step 2: Check account exists
       const checkAccount = await fetch("/.netlify/functions/checkAccountNumber", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ account_number: accountNum })
-      }).then(res => res.json());
-
-      if (!checkAccount.success) {
-        messageBox.textContent = "Invalid account number.";
-        return;
-      }
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ account_number: accountNum, session_id: sessionId })
+    }).then(res => res.json());
+    
+    if (!checkAccount.success) {
+      messageBox.textContent = checkAccount.message || "Invalid account number.";
+      return;
+    }
 
       // Step 3: Perform transfer
       const doTransfer = await fetch("/.netlify/functions/performTransfer", {
