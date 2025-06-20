@@ -227,10 +227,10 @@ depositBtn.addEventListener("click", () => {
 });
 
 // Attach event listener for request submit
-document.getElementById("submit-request").addEventListener("click", async () => {
-  const amount = parseFloat(document.getElementById("request-amount").value.trim());
-  const accountNumber = document.getElementById("request-account").value.trim();
-  const message = document.getElementById("request-message");
+document.getElementById("popup-submit").addEventListener("click", async () => {
+  const amount = parseFloat(document.getElementById("transfer-balance").value.trim());
+  const accountNumber = document.getElementById("transfer-number").value.trim();
+  const message = document.getElementById("popup-message");
   const sessionId = getCookie("session_id");
 
   // Clear previous message
