@@ -25,7 +25,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // Confirm user exists
   const { data: user, error } = await supabase
     .from("bank_users")
     .select("id")
@@ -39,13 +38,12 @@ exports.handler = async (event) => {
     };
   }
 
-  // Generate withdrawal code
   const code = generateCode();
 
-  // Store in checks table
+  // ✅ Insert account_id, code, and amount into checks
   const { error: insertError } = await supabase
     .from("checks")
-    .insert({ account_id: user.id, code });
+    .insert({ account_id: user.id, code, amount });
 
   if (insertError) {
     return {
@@ -59,3 +57,4 @@ exports.handler = async (event) => {
     body: JSON.stringify({ success: true, code }),
   };
 };
+
