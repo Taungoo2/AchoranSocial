@@ -32,3 +32,75 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error getting balance:", err);
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const popup = document.getElementById("popup");
+  const closeBtn = document.getElementById("popup-close");
+  const submitBtn = document.getElementById("popup-submit");
+  const messageBox = document.getElementById("popup-message");
+  const transferBtn = document.getElementById("transfer-btn");
+
+  let currentPopup = "transfer";
+
+  transferBtn.addEventListener("click", () => {
+    popup.classList.remove("hidden");
+    document.getElementById("popup-title").textContent = "Transfer";
+    currentPopup = "transfer";
+    messageBox.textContent = "";
+  });
+
+  closeBtn.addEventListener("click", () => popup.classList.add("hidden"));
+
+  submitBtn.addEventListener("click", async () => {
+    if (currentPopup === "transfer") {
+      const amount = parseFloat(document.getElementById("transfer-balance").value);
+      const accountNum = document.getElementById("transfer-number").value.trim();
+      const sessionId = getCookie("session_id");
+
+      if (!sessionId || !amount || amount <= 0 || !accountNum) {
+        messageBox.textContent = "Fill all fields correctly.";
+        return;
+      }
+
+      // Step 1: Check balance
+      const checkBalance = await fetch("/.netlify/functions/checkBalance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount })
+      }).then(res => res.json());
+
+      if (!checkBalance.success) {
+        messageBox.textContent = "Insufficient funds.";
+        return;
+      }
+
+      // Step 2: Check account exists
+      const checkAccount = await fetch("/.netlify/functions/checkAccountNumber", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ account_number: accountNum })
+      }).then(res => res.json());
+
+      if (!checkAccount.success) {
+        messageBox.textContent = "Invalid account number.";
+        return;
+      }
+
+      // Step 3: Perform transfer
+      const doTransfer = await fetch("/.netlify/functions/performTransfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount, to_account: accountNum })
+      }).then(res => res.json());
+
+      if (doTransfer.success) {
+        messageBox.style.color = "green";
+        messageBox.textContent = "Transfer successful!";
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Transfer failed.";
+      }
+    }
+  });
+});
