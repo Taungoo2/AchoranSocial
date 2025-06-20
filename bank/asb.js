@@ -86,26 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Step 3: transfer funds from check issuer to current user
-      const transferRes = await fetch("/.netlify/functions/transferById.js", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from_id: verify.check.account_id,
-        to_id: sessionId,
-        amount: verify.check.amount
-      })
-    });
-    
-    let transfer = {};
-    try {
-      transfer = await transferRes.json();
-    } catch (e) {
-      console.error("Transfer response error:", e);
-      messageBox.textContent = "Unexpected error during transfer.";
-      return;
-    }
-
+      // Step 3: Perform transfer
+      const doTransfer = await fetch("/.netlify/functions/performTransfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount, to_account: accountNum })
+      }).then(res => res.json());
 
       if (doTransfer.success) {
         messageBox.style.color = "green";
@@ -213,21 +199,17 @@ depositBtn.addEventListener("click", () => {
       return;
     }
 
-    // Step 3: transfer
-    const transfer = await fetch("/.netlify/functions/preformTransfer", {
+    // Step 3: transfer funds from check issuer to current user
+    const transfer = await fetch("/.netlify/functions/transferById", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        session_id: verify.check.account_id, // sender
-        to_account: sessionId,               // recipient is current user
+        from_id: verify.check.account_id,
+        to_id: sessionId,
         amount: verify.check.amount
       })
     }).then(res => res.json());
 
-    if (!transfer.success) {
-      messageBox.textContent = "Transfer failed.";
-      return;
-    }
 
     // Step 4: delete check
     await fetch("/.netlify/functions/removeCheck", {
