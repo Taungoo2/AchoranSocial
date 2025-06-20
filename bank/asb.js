@@ -226,6 +226,10 @@ depositBtn.addEventListener("click", () => {
   });
 });
 
+document.getElementById("request-btn").addEventListener("click", () => {
+  openPopup("request-popup"); // assuming popup has id="request-popup"
+});
+
 // Attach event listener for request submit
 document.getElementById("popup-submit").addEventListener("click", async () => {
   const amount = parseFloat(document.getElementById("transfer-balance").value.trim());
