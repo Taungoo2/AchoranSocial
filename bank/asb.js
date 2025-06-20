@@ -1,5 +1,23 @@
+// Normalize cookie path *before* anything else
+(function normalizeSessionCookiePath() {
+  const sessionId = getCookie("session_id");
+  if (sessionId) {
+    document.cookie = `session_id=${sessionId}; path=/bank`;
+  }
+})();
+
+// Define cookie reader
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+}
+
+// Wait for DOM, then fetch balance
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("asb.js loaded");
+
   const sessionId = getCookie("session_id");
   console.log("Session ID:", sessionId);
   if (!sessionId) return;
@@ -11,11 +29,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       body: JSON.stringify({ session_id: sessionId })
     });
 
-    console.log("Fetch response:", res);
-
     const data = await res.json();
-    console.log("Data from server:", data);
-
+    console.log("Data:", data);
     if (data.success && typeof data.balance === "number") {
       document.getElementById("account-balance").textContent = `M${data.balance}`;
     } else {
@@ -25,9 +40,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error getting balance:", err);
   }
 });
-
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
