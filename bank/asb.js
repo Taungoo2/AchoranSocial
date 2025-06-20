@@ -1,88 +1,224 @@
-const { createClient } = require("@supabase/supabase-js");
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+// Define cookie reader
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+}
 
-exports.handler = async (event) => {
+// Wait for DOM, then fetch balance
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("asb.js loaded");
+
+  const sessionId = getCookie("session_id");
+  console.log("Session ID:", sessionId);
+  if (!sessionId) return;
+
   try {
-    const { from_id, to_id, amount } = JSON.parse(event.body || "{}");
+    const res = await fetch("/.netlify/functions/getBalance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId })
+    });
 
-    if (!from_id || !to_id || !amount || amount <= 0) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ success: false, message: "Invalid input" }),
-      };
+    const data = await res.json();
+    console.log("Data:", data);
+    if (data.success && typeof data.balance === "number") {
+      document.getElementById("account-balance").textContent = `M${data.balance}`;
+    } else {
+      console.warn("Failed to fetch balance:", data.message);
     }
-
-    // Get sender balance
-    const { data: fromUser, error: fromError } = await supabase
-      .from("bank_users")
-      .select("balance")
-      .eq("id", from_id)
-      .single();
-
-    if (fromError || !fromUser) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ success: false, message: "Sender not found" }),
-      };
-    }
-
-    if (fromUser.balance < amount) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ success: false, message: "Insufficient funds" }),
-      };
-    }
-
-    // Get recipient balance
-    const { data: toUser, error: toError } = await supabase
-      .from("bank_users")
-      .select("balance")
-      .eq("id", to_id)
-      .single();
-
-    if (toError || !toUser) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ success: false, message: "Recipient not found" }),
-      };
-    }
-
-    // Subtract from sender
-    const { error: subtractError } = await supabase
-      .from("bank_users")
-      .update({ balance: fromUser.balance - amount })
-      .eq("id", from_id);
-
-    if (subtractError) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ success: false, message: "Failed to subtract from sender" }),
-      };
-    }
-
-    // Add to recipient
-    const { error: addError } = await supabase
-      .from("bank_users")
-      .update({ balance: toUser.balance + amount })
-      .eq("id", to_id);
-
-    if (addError) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ success: false, message: "Failed to add to recipient" }),
-      };
-    }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true }),
-    };
   } catch (err) {
-    console.error("transferById error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ success: false, message: "Server error" }),
-    };
+    console.error("Error getting balance:", err);
   }
-};
+});
 
+document.addEventListener("DOMContentLoaded", () => {
+  const popup = document.getElementById("popup");
+  const closeBtn = document.getElementById("popup-close");
+  const submitBtn = document.getElementById("popup-submit");
+  const messageBox = document.getElementById("popup-message");
+  const transferBtn = document.getElementById("transfer-btn");
+
+  let currentPopup = "transfer";
+
+  transferBtn.addEventListener("click", () => {
+    popup.classList.remove("hidden");
+    document.getElementById("popup-title").textContent = "Transfer";
+    currentPopup = "transfer";
+    messageBox.textContent = "";
+  });
+
+  closeBtn.addEventListener("click", () => popup.classList.add("hidden"));
+
+  submitBtn.addEventListener("click", async () => {
+    if (currentPopup === "transfer") {
+      const amount = parseFloat(document.getElementById("transfer-balance").value);
+      const accountNum = document.getElementById("transfer-number").value.trim();
+      const sessionId = getCookie("session_id");
+
+      if (!sessionId || !amount || amount <= 0 || !accountNum) {
+        messageBox.textContent = "Fill all fields correctly.";
+        return;
+      }
+
+      // Step 1: Check balance
+      const checkBalance = await fetch("/.netlify/functions/checkBalance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount })
+      }).then(res => res.json());
+
+      if (!checkBalance.success) {
+        messageBox.textContent = "Insufficient funds.";
+        return;
+      }
+
+      // Step 2: Check account exists
+      const checkAccount = await fetch("/.netlify/functions/checkAccountNumber", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ account_number: accountNum })
+      }).then(res => res.json());
+
+      if (!checkAccount.success) {
+        messageBox.textContent = "Invalid account number.";
+        return;
+      }
+
+      // Step 3: Perform transfer
+      const doTransfer = await fetch("/.netlify/functions/performTransfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount, to_account: accountNum })
+      }).then(res => res.json());
+
+      if (doTransfer.success) {
+        messageBox.style.color = "green";
+        messageBox.textContent = "Transfer successful!";
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Transfer failed.";
+      }
+    }
+  });
+});
+
+const withdrawBtn = document.getElementById("withdraw-btn");
+
+withdrawBtn.addEventListener("click", () => {
+  popup.classList.remove("hidden");
+  document.getElementById("popup-title").textContent = "Withdraw";
+  currentPopup = "withdraw";
+
+  // Replace popup body for withdraw
+  document.getElementById("popup-body").innerHTML = `
+    <input type="number" id="withdraw-amount" placeholder="Amount to withdraw" />
+    <button id="popup-submit">Submit</button>
+    <p id="popup-message"></p>
+  `;
+
+  // Rebind submit listener
+  document.getElementById("popup-submit").addEventListener("click", async () => {
+    const amount = parseFloat(document.getElementById("withdraw-amount").value);
+    const messageBox = document.getElementById("popup-message");
+    const sessionId = getCookie("session_id");
+
+    if (!sessionId || !amount || amount <= 0) {
+      messageBox.textContent = "Enter a valid amount.";
+      return;
+    }
+
+    try {
+      const res = await fetch("/.netlify/functions/withdrawCheck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, amount })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        messageBox.style.color = "green";
+        messageBox.textContent = `Withdrawal code: ${data.code}`;
+      } else {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Withdrawal failed.";
+      }
+    } catch (err) {
+      console.error("Withdraw error:", err);
+    }
+  });
+});
+
+const depositBtn = document.getElementById("deposit-btn");
+
+depositBtn.addEventListener("click", () => {
+  popup.classList.remove("hidden");
+  document.getElementById("popup-title").textContent = "Deposit";
+  currentPopup = "deposit";
+
+  document.getElementById("popup-body").innerHTML = `
+    <input type="text" id="check-code" maxlength="6" placeholder="Enter check code" />
+    <button id="popup-submit">Submit</button>
+    <p id="popup-message"></p>
+  `;
+
+  document.getElementById("popup-submit").addEventListener("click", async () => {
+    const code = document.getElementById("check-code").value.trim().toUpperCase();
+    const messageBox = document.getElementById("popup-message");
+    const sessionId = getCookie("session_id");
+
+    if (!code || code.length !== 6 || !sessionId) {
+      messageBox.textContent = "Invalid code.";
+      return;
+    }
+
+    // Step 1: verify check
+    const verify = await fetch("/.netlify/functions/verifyCheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    }).then(res => res.json());
+
+    if (!verify.success) {
+      messageBox.textContent = "Check not found.";
+      return;
+    }
+
+    // Step 2: check funds on sender account
+    const fundCheck = await fetch("/.netlify/functions/canFundCheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ account_id: verify.check.account_id, amount: verify.check.amount })
+    }).then(res => res.json());
+
+    if (!fundCheck.success) {
+      messageBox.textContent = "Check issuer has insufficient funds.";
+      return;
+    }
+
+    // Step 3: transfer funds from check issuer to current user
+    const transfer = await fetch("/.netlify/functions/transferById", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from_id: verify.check.account_id,
+        to_id: sessionId,
+        amount: verify.check.amount
+      })
+    }).then(res => res.json());
+
+
+    // Step 4: delete check
+    await fetch("/.netlify/functions/removeCheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+
+    messageBox.style.color = "green";
+    messageBox.textContent = `Check deposited successfully: M${verify.check.amount}`;
+  });
+});
