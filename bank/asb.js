@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Step 3: transfer funds from check issuer to current user
-      const transferRes = await fetch("/.netlify/functions/transferById", {
+      const transferRes = await fetch("/.netlify/functions/transferById.js", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
