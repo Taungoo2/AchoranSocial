@@ -10,8 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       body: JSON.stringify({ session_id: sessionId })
     });
 
+    console.log("Fetch response:", res);
+
     const data = await res.json();
-    console.log(data);
+    console.log("Data from server:", data);
+
     if (data.success && typeof data.balance === "number") {
       document.getElementById("account-balance").textContent = `M${data.balance}`;
     } else {
