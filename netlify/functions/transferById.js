@@ -12,18 +12,64 @@ exports.handler = async (event) => {
       };
     }
 
+    // Get sender balance
+    const { data: fromUser, error: fromError } = await supabase
+      .from("bank_users")
+      .select("balance")
+      .eq("id", from_id)
+      .single();
+
+    if (fromError || !fromUser) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ success: false, message: "Sender not found" }),
+      };
+    }
+
+    if (fromUser.balance < amount) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ success: false, message: "Insufficient funds" }),
+      };
+    }
+
+    // Get recipient balance
+    const { data: toUser, error: toError } = await supabase
+      .from("bank_users")
+      .select("balance")
+      .eq("id", to_id)
+      .single();
+
+    if (toError || !toUser) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ success: false, message: "Recipient not found" }),
+      };
+    }
+
     // Subtract from sender
     const { error: subtractError } = await supabase
-      .rpc("adjust_balance", { user_id: from_id, delta: -amount });
+      .from("bank_users")
+      .update({ balance: fromUser.balance - amount })
+      .eq("id", from_id);
+
+    if (subtractError) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ success: false, message: "Failed to subtract from sender" }),
+      };
+    }
 
     // Add to recipient
     const { error: addError } = await supabase
-      .rpc("adjust_balance", { user_id: to_id, delta: amount });
+      .from("bank_users")
+      .update({ balance: toUser.balance + amount })
+      .eq("id", to_id);
 
-    if (subtractError || addError) {
+    if (addError) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ success: false, message: "Transfer failed" }),
+        body: JSON.stringify({ success: false, message: "Failed to add to recipient" }),
       };
     }
 
@@ -39,4 +85,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
