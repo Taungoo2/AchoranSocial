@@ -31,6 +31,19 @@
       <button class="bank-button" id="deposit-btn">Deposit</button>
     </div>
   </main>
+  <div id="popup" class="popup hidden">
+  <div class="popup-content">
+    <span id="popup-close" class="popup-close">&times;</span>
+    <h2 id="popup-title">Transfer</h2>
+
+    <div id="popup-body">
+      <input type="number" id="transfer-balance" placeholder="Amount to transfer" />
+      <input type="text" id="transfer-number" placeholder="Recipient account number" />
+      <button id="popup-submit">Submit</button>
+      <p id="popup-message"></p>
+    </div>
+  </div>
+</div>
   <script src="asb.js"></script>
 </body>
 </html>
