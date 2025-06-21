@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ASB Login</title>
   <link rel="stylesheet" href="asblogin.css" />
 </head>
 <body>
-  <header class="header">
+  <div class="header">
     <div class="logo-container">
       <span class="logo">ASB</span>
     </div>
-    <nav class="nav-links">
-      <a href="asb.html" class="nav-link">Home</a>
+    <div class="nav-links">
+      <a href="asb.html" class="nav-link">Bank</a>
       <a href="#" class="nav-link">Help</a>
-    </nav>
-    <div class="account-link">
-      <a href="#" class="nav-link">Log In</a>
     </div>
-  </header>
+    <div class="account-link">
+      <a href="asblogin.html" class="nav-link">Log In</a>
+    </div>
+  </div>
 
-  <main class="main-content">
+  <div class="main-content">
     <div class="login-box">
       <h2>Login</h2>
       <form id="loginForm" class="login-form">
@@ -30,9 +30,12 @@
         <p id="messageBox" class="message-box"></p>
       </form>
     </div>
-  </main>
+  </div>
 
   <script src="asblogin.js"></script>
+</body>
+</html>
+
 </body>
 </html>
 
