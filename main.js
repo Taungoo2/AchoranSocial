@@ -43,6 +43,10 @@ document.getElementById("postForm").addEventListener("submit", async function (e
     const postContent = document.getElementById("postContent").value.trim();
     const userId = await fetchUserSession();
 
+    const submitBtn = this.querySelector("button[type='submit']");
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true; 
+
     if (!userId) {
         alert("You must be logged in to post.");
         return;
