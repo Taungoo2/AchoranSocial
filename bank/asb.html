@@ -3,47 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASBank</title>
-  <link rel="stylesheet" href="asb.css" />
+  <title>ASB Login</title>
+  <link rel="stylesheet" href="asblogin.css" />
 </head>
 <body>
   <header class="header">
     <div class="logo-container">
-      <!-- <img src="Assets/asbLogo.png" alt="ASBank" class="logo" /> -->
-      <p class = "logo"> AS Bank </p>
+      <span class="logo">ASB</span>
     </div>
     <nav class="nav-links">
-      <a href="asb.html" class="nav-link">Bank</a>
-      <a href="asbtos.html" class="nav-link">Terms of Service</a>
-      <a href="asblogin.html" class="nav-link">Log In</a>
+      <a href="asb.html" class="nav-link">Home</a>
+      <a href="#" class="nav-link">Help</a>
     </nav>
     <div class="account-link">
-      <a href="account.html" class="nav-link">Account</a>
+      <a href="#" class="nav-link">Log In</a>
     </div>
   </header>
 
   <main class="main-content">
-    <div class="account-balance" id="account-balance">M1000</div>
-
-    <div class="button-grid">
-      <button class="bank-button" id="transfer-btn">Transfer</button>
-      <button class="bank-button" id="request-btn">Request</button>
-      <button class="bank-button" id="withdraw-btn">Withdraw</button>
-      <button class="bank-button" id="deposit-btn">Deposit</button>
+    <div class="login-box">
+      <h2>Login</h2>
+      <form id="loginForm" class="login-form">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Log In</button>
+        <p id="messageBox" class="message-box"></p>
+      </form>
     </div>
   </main>
-  <div id="popup" class="popup hidden">
-    <div class="popup-content">
-      <span id="popup-close" class="popup-close">&times;</span>
-      <h2 id="popup-title">Transfer</h2>
 
-      <div id="popup-body">
-        <input type="number" id="transfer-balance" placeholder="Amount to transfer" />
-        <input type="text" id="transfer-number" placeholder="Recipient account number" />
-        <button id="popup-submit">Submit</button>
-        <p id="popup-message"></p>
-      </div>
-    </div>
+  <script src="asblogin.js"></script>
+</body>
+</html>
+
   </div>
   <script src="asb.js"></script>
 </body>
