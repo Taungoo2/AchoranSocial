@@ -57,7 +57,7 @@ exports.handler = async function (event) {
   const title = `Post by ${user.username}`;
   const description = post.content;
   const imageUrl = `https://yourdomain.netlify.app/Assets/${post.user_id}.png`;
-  const postUrl = `https://effortless-frangipane-fdb9af.netlify.app/post.html?id=${id}`;
+  const postUrl = `https://achorasocial.site/post.html?id=${id}`;
 
   const metaTags = `
     <meta property="og:title" content="${title}" />
