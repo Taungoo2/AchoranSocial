@@ -221,7 +221,7 @@ depositBtn.addEventListener("click", () => {
     messageBox.style.color = "green";
     messageBox.textContent = `Check deposited successfully: M${verify.check.amount}`;
     setTimeout(() => {
-      //location.reload();
+      location.reload();
     }, 1000);
   });
 });
