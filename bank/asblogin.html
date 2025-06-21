@@ -2,22 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login - ASB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASB Login</title>
   <link rel="stylesheet" href="asblogin.css" />
-  <script defer src="login.js"></script>
 </head>
 <body>
-  <header>
-    <h1>ASB Bank</h1>
-    <nav>
-      <a href="asb.html">Home</a>
-      <a href="account.html">Account</a>
-      <a href="login.html" class="active">Login</a>
+  <header class="header">
+    <div class="logo-container">
+      <span class="logo">ASB</span>
+    </div>
+    <nav class="nav-links">
+      <a href="asb.html" class="nav-link">Home</a>
+      <a href="#" class="nav-link">Help</a>
     </nav>
+    <div class="account-link">
+      <a href="#" class="nav-link">Log In</a>
+    </div>
   </header>
 
-  <main class="main-container">
-    <section class="login-section">
+  <main class="main-content">
+    <div class="login-box">
       <h2>Login</h2>
       <form id="loginForm" class="login-form">
         <input type="text" id="username" placeholder="Username" required />
@@ -25,8 +29,10 @@
         <button type="submit">Log In</button>
         <p id="messageBox" class="message-box"></p>
       </form>
-    </section>
+    </div>
   </main>
-  <script src = "login.js"></script>
+
+  <script src="asblogin.js"></script>
 </body>
 </html>
+
