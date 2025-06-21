@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - ASB</title>
+  <link rel="stylesheet" href="asb.css" />
+  <script defer src="login.js"></script>
+</head>
+<body>
+  <header>
+    <h1>ASB Bank</h1>
+    <nav>
+      <a href="asb.html">Home</a>
+      <a href="account.html">Account</a>
+      <a href="login.html" class="active">Login</a>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <section class="login-section">
+      <h2>Login</h2>
+      <form id="loginForm" class="login-form">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Log In</button>
+        <p id="messageBox" class="message-box"></p>
+      </form>
+    </section>
+  </main>
+  <script src = "login.js"></script>
+</body>
+</html>
