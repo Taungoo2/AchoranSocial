@@ -45,6 +45,8 @@ window.onload = async function () {
         document.querySelector(".account-placeholder").innerHTML = "<p>Error loading account information.</p>";
     }
 
+};
+
     // Check light_mode cookie on load to set switch state
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -72,5 +74,3 @@ toggle.addEventListener("change", async () => {
         console.error("Failed to toggle theme:", err);
     }
 });
-
-};
