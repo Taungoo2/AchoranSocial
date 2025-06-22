@@ -1,67 +1,237 @@
 body {
     background-color: #f5f5f5;
     color: #111;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    overflow: hidden;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 header {
     background-color: #ddd;
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
-nav a,
-.nav-right a {
+nav {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    gap: 20px;
+}
+
+.nav-center {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-right {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-right a,
+nav a {
     color: #111;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+a {
+    color: #111;
+    text-decoration: none;
 }
 
 a:hover {
     color: #333;
 }
 
-.title h1 {
-    color: #111;
+h1 {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    margin-top: 80px;
+    margin-bottom: 0px;
 }
 
 .feed-container {
+    width: 50%;
+    margin: auto;
+    margin-top: 5px;
+    flex: 1;
+    padding-top: 20px;
+    overflow-y: auto;
     background-color: transparent;
+}
+
+#feed {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: center;
+}
+
+.post-header {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.profile-img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.poster-name {
+    font-weight: bold;
+    font-size: 16px;
+    color: #111;
+    margin-bottom: 0;
+}
+
+.timestamp {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
 }
 
 .post {
     background-color: #fff;
     color: #111;
-}
-
-.poster-name {
-    color: #111;
-}
-
-.timestamp {
-    color: #666;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    text-align: left;
 }
 
 #footer-section {
     background-color: #ddd;
+    padding: 20px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    z-index: 1000;
+    position: sticky;
 }
 
 footer {
     color: #111;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+}
+
+.add-post-btn {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    position: fixed;
+    bottom: 80px;
+    right: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.popup-layer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 20, 20, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
 }
 
 .popup-box {
     background: #fff;
     color: #111;
+    width: 90%;
+    max-width: 600px;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .post-textarea {
+    width: 100%;
+    height: 200px;
+    resize: none;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
     background: #f0f0f0;
     color: #111;
+    outline: none;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .char-counter {
+    font-size: 0.9rem;
     color: #555;
 }
 
 .submit-post-btn {
     background: #ccc;
     color: #111;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
 }
 
 .submit-post-btn:hover {
@@ -71,40 +241,157 @@ footer {
 .login-form {
     background-color: #eee;
     color: #111;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-form h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 .login-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
     background-color: #f8f8f8;
     color: #111;
     border: 1px solid #bbb;
+    border-radius: 5px;
 }
 
 .login-form button {
     background-color: #4CAF50;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1001;
 }
 
 .login-form button:hover {
     background-color: #45a049;
 }
 
-.account-placeholder {
-    background-color: #fff;
-    color: #111;
+#login-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-content p {
+    margin-bottom: 1em;
+    white-space: pre-wrap;
+}
+
+.post-content strong {
+    font-weight: bold;
+}
+
+.post-content em {
+    font-style: italic;
 }
 
 .share-button {
+    margin-top: 8px;
+    padding: 5px 12px;
     background-color: #ddd;
     color: #111;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: auto;
 }
 
 .share-button:hover {
     background-color: #bbb;
 }
 
+.share-btn {
+    margin-left: auto;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+
+.account-placeholder {
+    background-color: #fff;
+    color: #111;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 18px;
+    text-align: left;
+}
+
+.account-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #888;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider::before {
+    transform: translateX(22px);
+}
+
 .password-hidden {
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 2px;
     color: #666;
 }
+
+.password-hidden:hover {
+    color: #000;
+}
+
 
 .password-hidden:hover {
     color: #000;
