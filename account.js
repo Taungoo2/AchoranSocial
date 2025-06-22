@@ -20,17 +20,26 @@ window.onload = async function () {
         }
 
         document.querySelector(".account-placeholder").innerHTML = `
-            <div class="account-info">
-                <div>
-                    <p><strong>Username:</strong> ${accountData.username}</p>
-                    <p><strong>Password:</strong> ${accountData.password}</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="accountToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        `;
+    <div class="account-info">
+        <div>
+            <p><strong>Username:</strong> ${accountData.username}</p>
+            <p><strong>Password:</strong> 
+                <span id="passwordField" class="password-hidden">••••••</span>
+            </p>
+        </div>
+        <label class="switch">
+            <input type="checkbox" id="accountToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+`;
+
+    document.getElementById("passwordField").addEventListener("click", function () {
+        const isHidden = this.classList.contains("password-hidden");
+        this.textContent = isHidden ? accountData.password : "••••••";
+        this.classList.toggle("password-hidden");
+    });
+
     } catch (err) {
         console.error("Error loading account data:", err);
         document.querySelector(".account-placeholder").innerHTML = "<p>Error loading account information.</p>";
