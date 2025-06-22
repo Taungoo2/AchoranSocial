@@ -44,4 +44,33 @@ window.onload = async function () {
         console.error("Error loading account data:", err);
         document.querySelector(".account-placeholder").innerHTML = "<p>Error loading account information.</p>";
     }
+
+    // Check light_mode cookie on load to set switch state
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+}
+
+const toggle = document.getElementById("accountToggle");
+const lightMode = getCookie("light_mode");
+
+if (lightMode === "2") {
+    toggle.checked = true;
+} else {
+    toggle.checked = false;
+}
+
+toggle.addEventListener("change", async () => {
+    try {
+        await fetch("/.netlify/functions/toggle-theme", {
+            credentials: "include"
+        });
+        setTimeout(() => location.reload(), 1000);
+    } catch (err) {
+        console.error("Failed to toggle theme:", err);
+    }
+});
+
 };
