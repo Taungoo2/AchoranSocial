@@ -399,6 +399,19 @@ input:checked + .slider {
     background-color: #4CAF50;
 }
 
+.password-hidden {
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 2px;
+    color: #ccc;
+}
+
+.password-hidden:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+
 input:checked + .slider::before {
     transform: translateX(22px);
 }
