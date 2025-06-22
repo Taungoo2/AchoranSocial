@@ -19,7 +19,8 @@ body {
 }
 
 .logo {
-  height: 40px;
+  font-size: 24px;
+  font-weight: bold;
   color: #eee;
 }
 
