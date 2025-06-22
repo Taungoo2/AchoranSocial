@@ -316,6 +316,30 @@ a:hover {
     height: 24px;
 }
 
+nav {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    gap: 20px;
+}
+
+.nav-center {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-right {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-right a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+}
 
 
 
