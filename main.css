@@ -341,5 +341,15 @@ nav {
     text-decoration: none;
 }
 
+.account-placeholder {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 18px;
+    color: white;
+    text-align: left;
+}
 
 
