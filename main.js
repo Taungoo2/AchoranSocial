@@ -125,7 +125,7 @@ async function loadPosts() {
             postHeader.appendChild(timestamp);
 
             const shareImg = document.createElement("img");
-            shareImg.src = "/Assets/share.png";
+            shareImg.src = lightMode ? "/Assets/lightshare.png" : "/Assets/share.png";
             shareImg.alt = "Share";
             shareImg.classList.add("share-btn");
 
