@@ -3,7 +3,6 @@ const lightMode = document.cookie.includes("light_mode=2");
 document.getElementById("light-theme").disabled = !lightMode;
 document.getElementById("dark-theme").disabled = lightMode;
 
-
 // Function to fetch user session from the backend
 async function fetchUserSession() {
     try {
